@@ -1,9 +1,8 @@
-import { Image } from 'expo-image';
 import { Check, LocateFixed, MapPin, ShoppingBag, Trash2 } from '@/components/icons';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AREAS, dealById, shopById } from '@/data/catalog';
-import { images } from '@/data/images';
+import { Photo } from '@/components/night';
 import { pick, rupees } from '@/lib/format';
 import { useStore } from '@/store/store';
 import { color, radius, space, TOUCH } from '@/theme/tokens';
@@ -101,7 +100,7 @@ export function CartSheet({ visible, onClose }: { visible: boolean; onClose: () 
             const shop = shopById[deal.shopId];
             return (
               <View key={deal.id} style={styles.item}>
-                <Image alt={deal.title} source={images[deal.image]} style={styles.thumb} contentFit="cover" />
+                <Photo k={deal.image} alt={deal.title} style={styles.thumb} />
                 <View style={{ flex: 1 }}>
                   <AppText variant="bodyStrong" numberOfLines={1}>
                     {pick(deal, 'title', 'titleHi', state.lang)}

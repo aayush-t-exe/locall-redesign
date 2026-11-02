@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import {
   BadgeCheck,
@@ -11,6 +10,7 @@ import {
   Package,
   Pencil,
   PiggyBank,
+  Check,
   RotateCcw,
   Sparkles,
   Star,
@@ -22,9 +22,10 @@ import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Switch, View } fr
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Gold3D, GoldFill, GoldNumber, GlowEllipse, Lux, Photo, Sky } from '@/components/night';
+import { useDockSpace } from '@/components/tab-bar';
 import { AppText, Button, EmptyState, IconButton, Pressy, SectionHeader, Segmented } from '@/components/ui';
-import { DEMO_USER, dealById, seedReviews, shopById } from '@/data/catalog';
-import { images } from '@/data/images';
+import { AREAS, DEMO_USER, dealById, seedReviews, shopById } from '@/data/catalog';
 import { pick, rupees } from '@/lib/format';
 import { useStore } from '@/store/store';
 import { color, motion, radius, space, TOUCH } from '@/theme/tokens';
@@ -34,6 +35,7 @@ const MILESTONES = [100, 250, 500, 1000, 2500, 5000];
 export default function Profile() {
   const { state, dispatch, t, haptic, showToast } = useStore();
   const insets = useSafeAreaInsets();
+  const dock = useDockSpace();
   const [alerts, setAlerts] = useState(true);
 
   const savedTotal = state.orders.reduce((s, o) => s + o.saved, 0);
@@ -45,29 +47,32 @@ export default function Profile() {
   const initials = DEMO_USER.name.split(' ').map((p) => p[0]).join('');
 
   return (
-    <ScrollView contentContainerStyle={{ paddingTop: insets.top + space.l, paddingBottom: space.huge }} showsVerticalScrollIndicator={false}>
+    <View style={{ flex: 1, backgroundColor: color.paper }}>
+    <ScrollView contentContainerStyle={{ paddingTop: insets.top + space.m, paddingBottom: dock }} showsVerticalScrollIndicator={false}>
+      <Sky kind="profile" height={640} />
       {/* Identity */}
       <View style={styles.identity}>
-        <View style={styles.avatar}>
-          <AppText variant="title" tone={color.navy}>
-            {initials}
-          </AppText>
-        </View>
-        <View style={{ flex: 1, gap: 2 }}>
-          <AppText variant="title" numberOfLines={1}>
-            {name}
-          </AppText>
-          <View style={styles.verified}>
-            <BadgeCheck size={16} color={color.success} strokeWidth={2.4} />
-            <AppText variant="small" weight="700" tone={color.success}>
-              {t('verified')}
-            </AppText>
-            <AppText variant="small" tone={color.muted}>
-              · {DEMO_USER.phone}
+        <View style={styles.avatarRing}>
+          <View style={styles.avatar}>
+            <AppText variant="title" style={{ fontSize: 19 }}>
+              {initials}
             </AppText>
           </View>
         </View>
-        <IconButton icon={Pencil} label={t('edit')} bg={color.sunk} />
+        <View style={{ flex: 1, gap: 3 }}>
+          <View style={styles.verified}>
+            <AppText variant="title" numberOfLines={1} style={{ flexShrink: 1, fontSize: 20, letterSpacing: -0.4 }}>
+              {name}
+            </AppText>
+            <View style={styles.tick} accessibilityLabel={t('verified')}>
+              <Check size={11} color="#04130C" strokeWidth={3.4} />
+            </View>
+          </View>
+          <AppText variant="small" tone={color.muted} numberOfLines={1}>
+            {pick(AREAS[state.area], 'name', 'nameHi', state.lang)} · {DEMO_USER.phone}
+          </AppText>
+        </View>
+        <IconButton icon={Pencil} label={t('edit')} size={42} />
       </View>
 
       {/* Savings hero */}
@@ -79,6 +84,13 @@ export default function Profile() {
         <Stat value={state.following.length} label={t('followingStat')} />
         <Stat value={reviews.length} label={t('reviewsStat')} />
       </View>
+      {savedTotal > 0 && (
+        <View style={styles.stats}>
+          <Medal icon="medal" title={t('medalFirst')} sub={pick(state.orders[state.orders.length - 1], 'dateLabel', 'dateLabelHi', state.lang)} />
+          <Medal icon="teaCup" title={t('medalChai')} sub={t('visits', { n: 5 })} />
+          <Medal icon="crown" title={t('medalInsider')} sub={t('toGo', { n: rupees(Math.max(goal - savedTotal, 0)) })} locked />
+        </View>
+      )}
 
       {/* Following */}
       {followed.length > 0 && (
@@ -92,7 +104,7 @@ export default function Profile() {
                 accessibilityRole="link"
                 accessibilityLabel={s.name}
                 style={styles.followChip}>
-                <Image alt={s.name} source={images[s.image]} style={styles.followImg} contentFit="cover" />
+                <Photo k={s.ownerImage ?? s.image} alt={s.name} style={styles.followImg} art={0.7} />
                 <View style={{ maxWidth: 150 }}>
                   <AppText variant="label" weight="700" numberOfLines={1}>
                     {pick(s, 'name', 'nameHi', state.lang)}
@@ -134,7 +146,7 @@ export default function Profile() {
                     style={styles.orderRow}
                     accessibilityRole="link"
                     onPress={() => router.push({ pathname: '/deal/[id]', params: { id: d.id } })}>
-                    <Image alt={d.title} source={images[d.image]} style={styles.orderImg} contentFit="cover" />
+                    <Photo k={d.image} alt={d.title} style={styles.orderImg} art={0.7} />
                     <View style={{ flex: 1, gap: 1 }}>
                       <AppText variant="bodyStrong" numberOfLines={1}>
                         {pick(d, 'title', 'titleHi', state.lang)}
@@ -150,7 +162,7 @@ export default function Profile() {
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
                       <AppText variant="bodyStrong">{rupees(o.paid)}</AppText>
-                      <AppText variant="small" weight="700" tone={color.success}>
+                      <AppText variant="small" weight="800" tone={color.gold}>
                         −{rupees(o.saved)}
                       </AppText>
                     </View>
@@ -262,6 +274,7 @@ export default function Profile() {
         </View>
       </View>
     </ScrollView>
+    </View>
   );
 }
 
@@ -270,45 +283,59 @@ function SavingsCard({ total, shops, goal }: { total: number; shops: number; goa
   const shown = useCountUp(total);
   const progress = useSharedValue(0);
   useEffect(() => {
-    progress.value = withDelay(250, withSpring(Math.min(total / goal, 1), motion.sheet));
+    progress.value = withDelay(350, withSpring(Math.min(total / goal, 1), motion.sheet));
   }, [total, goal, progress]);
   const bar = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` }));
+  const pct = Math.round(Math.min(total / goal, 1) * 100);
 
   if (total === 0) {
     return (
       <View style={[styles.hero, { gap: space.m }]}>
-        <View style={styles.heroIcon}>
-          <PiggyBank size={26} color={color.orange} strokeWidth={2.2} />
-        </View>
-        <AppText variant="heading" tone="#FFFFFF">
+        <Gold3D k="moneyBag" size={120} />
+        <AppText variant="heading" center>
           {t('startSaving')}
         </AppText>
-        <Button label={t('browseDeals')} onPress={() => router.navigate('/')} style={{ alignSelf: 'flex-start' }} />
+        <Button label={t('browseDeals')} onPress={() => router.navigate('/')} />
       </View>
     );
   }
 
   return (
-    <View style={styles.hero} accessible accessibilityLabel={`${t('youSaved')} ${rupees(total)} ${t('thisMonth', { n: shops })}`}>
-      <View style={styles.heroTop}>
-        <AppText variant="label" tone="#C9D3EA">
-          {t('youSaved')}
+    <>
+      <View style={styles.hero} accessible accessibilityLabel={`${t('youSaved')} ${rupees(total)} ${t('thisMonthAt', { n: shops })}`}>
+        <GlowEllipse w={320} h={190} o={0.1} style={[styles.ring, { top: 0 }]} />
+        <GlowEllipse w={250} h={150} o={0.2} style={[styles.ring, { top: 22 }]} />
+        <Gold3D k="rupee" size={176} style={styles.coin} />
+        <Lux size={25}>{t('youSavedLux')}</Lux>
+        <GoldNumber value={rupees(shown)} size={60} style={{ marginTop: 4 }} />
+        <AppText variant="label" tone={color.muted} center style={{ marginTop: 4 }}>
+          {t('thisMonthAt', { n: shops })}
         </AppText>
-        <Sparkles size={20} color={color.orange} strokeWidth={2.2} />
       </View>
-      <AppText style={styles.heroAmount} tone="#FFFFFF" variant="display">
-        {rupees(shown)}
-      </AppText>
-      <AppText variant="body" tone="#E3E8F4">
-        {t('thisMonth', { n: shops })}
-      </AppText>
-      <View style={styles.track}>
-        <Animated.View style={[styles.fill, bar]} />
+      <View style={styles.goal}>
+        <View style={styles.goalTop}>
+          <AppText variant="label" weight="700" style={{ flex: 1 }}>
+            {t('insiderGoal', { n: rupees(Math.max(goal - total, 0)) })}
+          </AppText>
+          <AppText variant="small" weight="700" tone={color.muted}>
+            {pct}%
+          </AppText>
+        </View>
+        <View style={styles.track}>
+          <Animated.View style={[styles.fill, bar]}>
+            <GoldFill radius={6} />
+          </Animated.View>
+        </View>
+        <View style={styles.goalTop}>
+          <AppText variant="micro" tone={color.faint} style={{ flex: 1 }}>
+            ₹0
+          </AppText>
+          <AppText variant="micro" tone={color.faint}>
+            {rupees(goal)}
+          </AppText>
+        </View>
       </View>
-      <AppText variant="small" tone="#C9D3EA">
-        {t('nextMilestone', { n: Math.max(goal - total, 0).toLocaleString('en-IN'), goal: goal.toLocaleString('en-IN') })}
-      </AppText>
-    </View>
+    </>
   );
 }
 
@@ -341,9 +368,25 @@ function useCountUp(target: number) {
 function Stat({ value, label }: { value: number; label: string }) {
   return (
     <View style={styles.stat}>
-      <AppText variant="title">{value}</AppText>
-      <AppText variant="small" tone={color.muted} numberOfLines={1}>
+      <AppText variant="title" style={{ fontSize: 24, lineHeight: 28, letterSpacing: -0.6 }}>
+        {value}
+      </AppText>
+      <AppText variant="small" weight="600" tone={color.muted} numberOfLines={1}>
         {label}
+      </AppText>
+    </View>
+  );
+}
+
+function Medal({ icon, title, sub, locked }: { icon: 'medal' | 'teaCup' | 'crown'; title: string; sub: string; locked?: boolean }) {
+  return (
+    <View style={[styles.stat, styles.medal, locked && { opacity: 0.5 }]}>
+      <Gold3D k={icon} size={44} />
+      <AppText variant="small" weight="700" center numberOfLines={1}>
+        {title}
+      </AppText>
+      <AppText variant="micro" tone={color.muted} center numberOfLines={1}>
+        {sub}
       </AppText>
     </View>
   );
@@ -395,28 +438,24 @@ function Row({
 
 const styles = StyleSheet.create({
   identity: { flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.xl },
-  avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: color.navyTint, alignItems: 'center', justifyContent: 'center' },
-  verified: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  hero: {
-    marginHorizontal: space.xl,
-    marginTop: space.xl,
-    padding: space.xl,
-    borderRadius: radius.xxl,
-    backgroundColor: color.ink,
-    gap: 4,
-    overflow: 'hidden',
-  },
-  heroIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: 'rgba(255,107,0,0.16)', alignItems: 'center', justifyContent: 'center' },
-  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  heroAmount: { fontSize: 44, lineHeight: 52 },
-  track: { height: 10, borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.14)', marginTop: space.m, marginBottom: 6, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 5, backgroundColor: color.orange },
+  avatarRing: { width: 56, height: 56, borderRadius: 28, padding: 2, backgroundColor: color.gold },
+  avatar: { flex: 1, borderRadius: 26, backgroundColor: '#14143A', alignItems: 'center', justifyContent: 'center' },
+  verified: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  tick: { width: 18, height: 18, borderRadius: 9, backgroundColor: color.success, alignItems: 'center', justifyContent: 'center' },
+  hero: { alignItems: 'center', marginTop: space.s, paddingHorizontal: space.xl },
+  ring: { position: 'absolute', alignSelf: 'center', transform: [{ rotate: '-8deg' }] },
+  coin: { transform: [{ rotate: '-10deg' }], marginBottom: -2 },
+  goal: { marginHorizontal: space.xl, marginTop: space.xl, padding: space.l, gap: 10, borderRadius: radius.xl, backgroundColor: color.sunk, borderWidth: 1, borderColor: color.line },
+  goalTop: { flexDirection: 'row', alignItems: 'center', gap: space.s },
+  track: { height: 10, borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.08)' },
+  fill: { height: '100%', borderRadius: 6, overflow: 'hidden', shadowColor: color.gold, shadowOpacity: 0.6, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
   stats: { flexDirection: 'row', gap: space.s, paddingHorizontal: space.xl, marginTop: space.m },
+  medal: { alignItems: 'center', gap: 4 },
   stat: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: space.m,
-    backgroundColor: color.card,
+    alignItems: 'flex-start',
+    padding: space.m,
+    backgroundColor: color.sunk,
     borderRadius: radius.l,
     borderWidth: 1,
     borderColor: color.line,
@@ -435,7 +474,7 @@ const styles = StyleSheet.create({
   },
   followImg: { width: 40, height: 40, borderRadius: 20 },
   panel: { backgroundColor: color.card, borderRadius: radius.xl, borderWidth: 1, borderColor: color.line, overflow: 'hidden' },
-  protoPanel: { borderStyle: 'dashed', borderColor: color.lineStrong, backgroundColor: '#FFFDF9' },
+  protoPanel: { borderStyle: 'dashed', borderColor: color.lineStrong, backgroundColor: color.card },
   sep: { height: 1, backgroundColor: color.line, marginLeft: 68 },
   orderRow: { flexDirection: 'row', alignItems: 'center', gap: space.m, padding: space.m, paddingLeft: space.l },
   orderImg: { width: 52, height: 52, borderRadius: radius.m },

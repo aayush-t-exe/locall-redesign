@@ -104,8 +104,8 @@ type ButtonProps = {
 };
 
 export function Button({ label, onPress, icon: Icon, kind = 'primary', size = 'm', full, style, accessibilityHint }: ButtonProps) {
-  const bg = { primary: color.orangeStrong, secondary: color.card, ghost: 'transparent', whatsapp: color.whatsapp }[kind];
-  const fg = { primary: '#FFFFFF', secondary: color.ink, ghost: color.orangeText, whatsapp: '#FFFFFF' }[kind];
+  const bg = { primary: color.gold, secondary: color.sunk, ghost: 'transparent', whatsapp: color.whatsapp }[kind];
+  const fg = { primary: color.onGold, secondary: color.ink, ghost: color.gold, whatsapp: '#FFFFFF' }[kind];
   const border = kind === 'secondary' ? color.lineStrong : 'transparent';
   return (
     <Pressy
@@ -133,7 +133,7 @@ export function IconButton({
   onPress,
   badge,
   tone = color.ink,
-  bg = color.card,
+  bg = color.sunk,
   size = TOUCH,
 }: {
   icon: LucideIcon;
@@ -179,7 +179,7 @@ export function Chip({
   trailing?: LucideIcon;
   style?: StyleProp<ViewStyle>;
 }) {
-  const fg = selected ? '#FFFFFF' : color.ink;
+  const fg = selected ? color.gold : color.ink;
   return (
     <Pressy
       onPress={onPress}
@@ -187,7 +187,7 @@ export function Chip({
       accessibilityState={{ selected }}
       accessibilityLabel={label}
       style={[styles.chip, selected ? styles.chipOn : styles.chipOff, style]}>
-      {Icon && <Icon size={16} color={selected ? '#FFFFFF' : color.orangeText} strokeWidth={2.4} />}
+      {Icon && <Icon size={16} color={selected ? color.gold : color.orangeText} strokeWidth={2.4} />}
       <AppText variant="label" tone={fg} numberOfLines={1}>
         {label}
       </AppText>
@@ -244,7 +244,7 @@ export function Segmented<K extends string>({
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             style={[styles.segItem, on && styles.segItemOn]}>
-            <AppText variant="label" tone={on ? color.ink : color.muted} weight={on ? '700' : '600'} numberOfLines={1}>
+            <AppText variant="label" tone={on ? color.gold : color.muted} weight={on ? '700' : '600'} numberOfLines={1}>
               {it.label}
               {it.count != null ? ` ${it.count}` : ''}
             </AppText>
@@ -275,7 +275,7 @@ export function EmptyState({
   return (
     <View style={[styles.empty, style]}>
       <View style={styles.emptyIcon}>
-        <Icon size={28} color={color.orangeText} strokeWidth={2} />
+        <Icon size={28} color={color.gold} strokeWidth={2} />
       </View>
       <AppText variant="heading" center>
         {title}
@@ -325,13 +325,13 @@ const styles = StyleSheet.create({
     height: 20,
     paddingHorizontal: 5,
     borderRadius: 10,
-    backgroundColor: color.orangeStrong,
+    backgroundColor: color.orange,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: color.paper,
   },
-  badgeText: { color: '#FFFFFF', fontSize: 11, fontFamily: 'PlusJakartaSans_800ExtraBold' },
+  badgeText: { color: color.onGold, fontSize: 11, fontFamily: 'PlusJakartaSans_800ExtraBold' },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -341,31 +341,26 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     borderWidth: 1.5,
   },
-  chipOff: { backgroundColor: color.card, borderColor: color.line },
-  chipOn: { backgroundColor: color.ink, borderColor: color.ink },
+  chipOff: { backgroundColor: color.sunk, borderColor: color.line },
+  chipOn: { backgroundColor: color.goldTint, borderColor: color.goldLine },
   section: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: space.xl, marginBottom: space.m, gap: space.m },
   sectionAction: { minHeight: 32, justifyContent: 'center' },
   seg: {
     flexDirection: 'row',
     backgroundColor: color.sunk,
-    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: color.line,
+    borderRadius: radius.l,
     padding: 4,
   },
-  segItem: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radius.pill, paddingHorizontal: space.s },
-  segItemOn: {
-    backgroundColor: color.card,
-    shadowColor: '#0B1F4D',
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
-  },
+  segItem: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radius.m, paddingHorizontal: space.s },
+  segItemOn: { backgroundColor: color.goldTint, borderWidth: 1, borderColor: color.goldLine },
   empty: { alignItems: 'center', gap: space.s, paddingVertical: space.huge, paddingHorizontal: space.xxl },
   emptyIcon: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: color.orangeTint,
+    backgroundColor: color.goldTint,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: space.s,

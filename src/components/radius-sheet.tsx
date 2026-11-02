@@ -113,11 +113,11 @@ export function RadiusSheet({ visible, onClose }: { visible: boolean; onClose: (
                 style={[
                   styles.ring,
                   { width: r * 2, height: r * 2, borderRadius: r, left: size / 2 - r, top: size / 2 - r },
-                  on && { borderColor: 'rgba(194,65,12,0.35)' },
+                  on && { borderColor: 'rgba(246,207,114,0.35)' },
                 ]}>
                 {(stop === km || stop === MAX_KM) && (
                   <View style={[styles.ringLabel, stop === km && styles.ringLabelOn]}>
-                    <AppText variant="micro" tone={stop === km ? '#FFFFFF' : color.muted}>
+                    <AppText variant="micro" tone={stop === km ? color.onGold : color.muted}>
                       {stop} km
                     </AppText>
                   </View>
@@ -190,13 +190,13 @@ function Pin({ x, y, inside, delay }: { x: number; y: number; inside: boolean; d
 }
 
 const styles = StyleSheet.create({
-  map: { backgroundColor: '#F3EBE1', overflow: 'hidden', marginBottom: space.l },
+  map: { backgroundColor: '#0A0B26', overflow: 'hidden', marginBottom: space.l },
   disc: { position: 'absolute', backgroundColor: 'rgba(255,107,0,0.14)', borderWidth: 2, borderColor: color.orange },
-  ring: { position: 'absolute', borderWidth: 1, borderColor: 'rgba(11,31,77,0.12)', borderStyle: 'dashed', alignItems: 'center' },
-  ringLabel: { position: 'absolute', top: -9, paddingHorizontal: 6, borderRadius: 8, backgroundColor: '#F3EBE1' },
-  ringLabelOn: { backgroundColor: color.orangeStrong },
-  pin: { position: 'absolute', width: 14, height: 14, borderRadius: 7, borderWidth: 2.5, borderColor: '#FFFFFF' },
-  pinOn: { backgroundColor: color.navy },
+  ring: { position: 'absolute', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', borderStyle: 'dashed', alignItems: 'center' },
+  ringLabel: { position: 'absolute', top: -9, paddingHorizontal: 6, borderRadius: 8, backgroundColor: '#0A0B26' },
+  ringLabelOn: { backgroundColor: color.gold },
+  pin: { position: 'absolute', width: 14, height: 14, borderRadius: 7, borderWidth: 2.5, borderColor: color.paper },
+  pinOn: { backgroundColor: color.gold },
   pinOff: { backgroundColor: color.faint, opacity: 0.6 },
   me: { position: 'absolute' },
   stops: { flexDirection: 'row', flexWrap: 'wrap', gap: space.s, justifyContent: 'center' },

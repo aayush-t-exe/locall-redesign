@@ -62,4 +62,4 @@ export function searchDeals(q: string): Deal[] {
     .map((x) => x.d);
 }
 
-export const POPULAR_SEARCHES = ['momos', 'kurta', 'jalebi', 'haircut', 'sabzi', 'tiffin'];
+export const POPULAR_SEARCHES = ['momos', 'kurta', 'jalebi', 'haircut', 'sabzi', 'biryani'];

@@ -57,4 +57,4 @@ Stack: Expo SDK 58, React Native 0.88, Expo Router, Reanimated 4, expo-image, ex
 
 ## Credits
 
-Food and shop photos are from Pexels (Pexels licence). The list is in `assets/images/deals/CREDITS.md`. The Locall logo belongs to Localstack Market Pvt Ltd and is used here only to show the redesign in context.
+Food and shop photos in `assets/images/photos` are placeholders picked for this prototype and belong to their owners. The gold 3D icons are from [3dicons](https://3dicons.co) (CC0). The Locall logo belongs to Localstack Market Pvt Ltd and is used here only to show the redesign in context.

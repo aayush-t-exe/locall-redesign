@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, BadgeCheck, Info, ShoppingBag, Star } from '@/components/icons';
 import { useEffect, useState } from 'react';
@@ -10,9 +9,9 @@ import { EndsTag, OffBadge, Price, RailCard, SaveButton } from '@/components/dea
 import { ContactRow, FollowButton } from '@/components/shop-bits';
 import { CartSheet } from '@/components/sheets';
 import { Toast } from '@/components/toast';
+import { GoldButton, Photo } from '@/components/night';
 import { AppText, Button, IconButton, Pressy, SectionHeader } from '@/components/ui';
 import { dealById, shopById } from '@/data/catalog';
-import { images } from '@/data/images';
 import { isEnded, isOpen, kmLabel, pick, rupees, travel } from '@/lib/format';
 import { liveDeals } from '@/lib/query';
 import { useStore } from '@/store/store';
@@ -46,9 +45,9 @@ export default function DealScreen() {
     <View style={{ flex: 1, backgroundColor: color.paper }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 140 }} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
-          <Image alt={deal.title} source={images[deal.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+          <Photo k={deal.image} alt={deal.title} style={StyleSheet.absoluteFill} />
           <View style={[styles.heroBar, { top: insets.top + space.s }]}>
-            <IconButton icon={ArrowLeft} label={t('back')} onPress={back} bg="rgba(255,255,255,0.94)" />
+            <IconButton icon={ArrowLeft} label={t('back')} onPress={back} bg="rgba(5,6,26,0.62)" />
             <SaveButton dealId={deal.id} />
           </View>
         </View>
@@ -82,7 +81,7 @@ export default function DealScreen() {
             accessibilityLabel={`${t('visitShop')}: ${shop.name}`}
             style={styles.shop}>
             <View style={styles.shopTop}>
-              <Image alt={shop.owner} source={images[shop.ownerImage ?? shop.image]} style={styles.shopImg} contentFit="cover" />
+              <Photo k={shop.ownerImage ?? shop.image} alt={shop.owner} style={styles.shopImg} />
               <View style={{ flex: 1 }}>
                 <View style={styles.inline}>
                   <AppText variant="bodyStrong" numberOfLines={1} style={{ flexShrink: 1 }}>
@@ -161,23 +160,32 @@ export default function DealScreen() {
           <AppText variant="small" tone={color.muted}>
             {t('total')}
           </AppText>
-          <AppText variant="title">{rupees(deal.price)}</AppText>
+          <AppText variant="title" tone={color.gold}>
+            {rupees(deal.price)}
+          </AppText>
         </View>
         {ended ? (
           <Button label={t('seeSimilar')} kind="secondary" onPress={() => router.push({ pathname: '/search', params: { q: deal.category } })} />
-        ) : inCart ? (
-          <Button label={`${inCart} ${t('inCart')} · ${t('cart')}`} kind="secondary" icon={ShoppingBag} onPress={() => setCartOpen(true)} />
         ) : (
-          <Button
-            label={t('addToCart')}
-            icon={ShoppingBag}
-            size="l"
-            onPress={() => {
-              dispatch({ type: 'cartAdd', id: deal.id });
-              haptic('success');
-              showToast({ message: `${title} · ${t('added')}`, actionLabel: t('cart'), onAction: () => setCartOpen(true) });
-            }}
-          />
+          <>
+            <IconButton
+              icon={ShoppingBag}
+              label={inCart ? `${inCart} ${t('inCart')} · ${t('cart')}` : t('addToCart')}
+              badge={inCart || undefined}
+              size={52}
+              onPress={() => {
+                if (inCart) return setCartOpen(true);
+                dispatch({ type: 'cartAdd', id: deal.id });
+                haptic('success');
+                showToast({ message: `${title} · ${t('added')}`, actionLabel: t('cart'), onAction: () => setCartOpen(true) });
+              }}
+            />
+            <GoldButton
+              label={t('claimAtCounter')}
+              onPress={() => router.push({ pathname: '/claim/[id]', params: { id: deal.id } })}
+              style={{ minHeight: 52 }}
+            />
+          </>
         )}
       </View>
       <Toast bottom={110 + insets.bottom} />

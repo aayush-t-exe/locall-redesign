@@ -23,8 +23,8 @@ export function FollowButton({ shop, compact }: { shop: Shop; compact?: boolean 
       accessibilityState={{ selected: on }}
       accessibilityLabel={`${on ? t('followingBtn') : t('follow')} ${shop.name}`}
       style={[styles.follow, on ? styles.followOn : styles.followOff, compact && { paddingHorizontal: space.m }]}>
-      {on ? <Check size={18} color={color.navy} strokeWidth={2.6} /> : <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />}
-      <AppText variant="label" weight="800" tone={on ? color.navy : '#FFFFFF'}>
+      {on ? <Check size={18} color={color.navy} strokeWidth={2.6} /> : <Plus size={18} color={color.onGold} strokeWidth={2.6} />}
+      <AppText variant="label" weight="800" tone={on ? color.navy : color.onGold}>
         {on ? t('followingBtn') : t('follow')}
       </AppText>
     </Pressy>
@@ -36,7 +36,7 @@ export function ContactRow({ shop }: { shop: Shop }) {
   const { t } = useStore();
   const items = [
     { key: 'call', icon: Phone, label: t('call'), bg: color.navyTint, fg: color.navy, url: 'tel:+917587315025' },
-    { key: 'wa', icon: MessageCircle, label: t('whatsapp'), bg: '#E3F4EA', fg: color.whatsapp, url: 'https://wa.me/917587315025' },
+    { key: 'wa', icon: MessageCircle, label: t('whatsapp'), bg: color.successTint, fg: color.success, url: 'https://wa.me/917587315025' },
     {
       key: 'dir',
       icon: Navigation,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     borderWidth: 1.5,
   },
-  followOff: { backgroundColor: color.orangeStrong, borderColor: color.orangeStrong },
+  followOff: { backgroundColor: color.gold, borderColor: color.gold },
   followOn: { backgroundColor: color.navyTint, borderColor: color.navyTint },
   contact: { flexDirection: 'row', gap: space.s },
   contactBtn: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 4, minHeight: 68, borderRadius: radius.l },

@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, BadgeCheck, Clock, Quote, Star } from '@/components/icons';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -9,7 +8,7 @@ import { ContactRow, FollowButton } from '@/components/shop-bits';
 import { Toast } from '@/components/toast';
 import { AppText, IconButton, SectionHeader } from '@/components/ui';
 import { shopById } from '@/data/catalog';
-import { images } from '@/data/images';
+import { Photo } from '@/components/night';
 import { isOpen, kmLabel, pick, travel } from '@/lib/format';
 import { liveDeals } from '@/lib/query';
 import { useStore } from '@/store/store';
@@ -29,15 +28,15 @@ export default function ShopScreen() {
     <View style={{ flex: 1, backgroundColor: color.paper }}>
       <ScrollView contentContainerStyle={{ paddingBottom: space.huge }} showsVerticalScrollIndicator={false}>
         <View style={styles.cover}>
-          <Image alt={shop.name} source={images[shop.image]} style={StyleSheet.absoluteFill} contentFit="cover" />
+          <Photo k={shop.image} alt={shop.name} style={StyleSheet.absoluteFill} />
           <View style={styles.scrim} />
           <View style={[styles.bar, { top: insets.top + space.s }]}>
-            <IconButton icon={ArrowLeft} label={t('back')} onPress={back} bg="rgba(255,255,255,0.94)" />
+            <IconButton icon={ArrowLeft} label={t('back')} onPress={back} bg="rgba(5,6,26,0.62)" />
           </View>
         </View>
 
         <View style={styles.body}>
-          <Image alt={shop.owner} source={images[shop.ownerImage ?? shop.image]} style={styles.owner} contentFit="cover" />
+          <Photo k={shop.ownerImage ?? shop.image} alt={shop.owner} style={styles.owner} />
           <AppText variant="display">
             {pick(shop, 'name', 'nameHi', state.lang)}
             {shop.verified ? '  ' : ''}
@@ -97,7 +96,7 @@ export default function ShopScreen() {
 
 const styles = StyleSheet.create({
   cover: { width: '100%', height: 200, backgroundColor: color.sunk },
-  scrim: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(11,31,77,0.25)' },
+  scrim: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(5,6,26,0.35)' },
   bar: { position: 'absolute', left: space.l },
   body: { paddingHorizontal: space.xl, marginTop: -44, gap: 2 },
   owner: { width: 88, height: 88, borderRadius: 44, borderWidth: 4, borderColor: color.paper, marginBottom: space.m, backgroundColor: color.sunk },

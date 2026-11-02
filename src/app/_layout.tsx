@@ -4,6 +4,7 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
+import { InstrumentSerif_400Regular, InstrumentSerif_400Regular_Italic } from '@expo-google-fonts/instrument-serif';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router/stack';
 import * as SplashScreen from 'expo-splash-screen';
@@ -24,6 +25,8 @@ export default function RootLayout() {
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
+    InstrumentSerif_400Regular,
+    InstrumentSerif_400Regular_Italic,
   });
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function RootLayout() {
   return (
     <StoreProvider>
       <DevanagariFonts />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <View style={styles.outer}>
         <View style={styles.inner}>
           <Stack
@@ -49,6 +52,7 @@ export default function RootLayout() {
             <Stack.Screen name="deal/[id]" />
             <Stack.Screen name="shop/[id]" />
             <Stack.Screen name="search" options={{ animation: 'fade' }} />
+            <Stack.Screen name="claim/[id]" options={{ animation: 'fade_from_bottom', presentation: 'transparentModal', gestureEnabled: false }} />
           </Stack>
         </View>
       </View>
@@ -59,7 +63,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   outer: {
     flex: 1,
-    backgroundColor: Platform.OS === 'web' ? '#EFE4D6' : color.paper,
+    backgroundColor: Platform.OS === 'web' ? '#020310' : color.paper,
     alignItems: 'center',
   },
   inner: { flex: 1, width: '100%', maxWidth: 480, backgroundColor: color.paper, overflow: 'hidden' },

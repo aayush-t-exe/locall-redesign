@@ -1,15 +1,15 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { BadgeCheck, Bookmark, Clock, Plus, Star, Timer } from '@/components/icons';
+import { BadgeCheck, Bookmark, Clock, Navigation, Plus, Star } from '@/components/icons';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { type Deal, shopById } from '@/data/catalog';
-import { images } from '@/data/images';
 import { endsLabel, isOpen, kmLabel, pctOff, pick, rupees, travel } from '@/lib/format';
 import { useStore } from '@/store/store';
-import { color, motion, radius, shadow, space } from '@/theme/tokens';
+import { color, motion, radius, space } from '@/theme/tokens';
 
+import { EmberChip, Photo, Ticket } from './night';
 import { AppText, Dot, Pressy, textStyles } from './ui';
 
 /* ---------- Save (bookmark) ---------- */
@@ -44,12 +44,7 @@ export function SaveButton({ dealId, variant = 'float' }: { dealId: string; vari
       accessibilityLabel={saved ? t('removeSaved') : t('saveDeal')}
       style={[styles.save, variant === 'float' ? styles.saveFloat : styles.savePlain]}>
       <Animated.View style={anim}>
-        <Bookmark
-          size={20}
-          strokeWidth={2.2}
-          color={saved ? color.orangeStrong : color.ink}
-          fill={saved ? color.orangeStrong : 'transparent'}
-        />
+        <Bookmark size={19} strokeWidth={2.2} color={saved ? color.gold : color.ink} fill={saved ? color.gold : 'transparent'} />
       </Animated.View>
     </Pressy>
   );
@@ -61,8 +56,8 @@ export function OffBadge({ deal, style }: { deal: Deal; style?: object }) {
   const { t } = useStore();
   return (
     <View style={[styles.off, style]}>
-      <AppText variant="micro" tone="#FFFFFF">
-        {pctOff(deal)}% {t('off')}
+      <AppText variant="micro" weight="800" tone={color.onGold}>
+        {pctOff(deal)}% {t('off').toUpperCase()}
       </AppText>
     </View>
   );
@@ -71,11 +66,11 @@ export function OffBadge({ deal, style }: { deal: Deal; style?: object }) {
 export function EndsTag({ deal, compact }: { deal: Deal; compact?: boolean }) {
   const { t, state } = useStore();
   const e = endsLabel(deal, t, state.lang);
-  const Icon = e.urgent ? Timer : Clock;
+  if (e.urgent) return <EmberChip label={e.text} />;
   return (
-    <View style={[styles.ends, e.urgent && styles.endsUrgent, compact && { paddingHorizontal: 0, backgroundColor: 'transparent' }]}>
-      <Icon size={14} strokeWidth={2.4} color={e.urgent ? color.orangeDeep : color.muted} />
-      <AppText variant="small" weight="600" tone={e.urgent ? color.orangeDeep : color.muted} numberOfLines={1}>
+    <View style={[styles.ends, compact && { paddingHorizontal: 0 }]}>
+      <Clock size={13} strokeWidth={2.4} color={color.muted} />
+      <AppText variant="small" weight="600" tone={color.muted} numberOfLines={1}>
         {e.text}
       </AppText>
     </View>
@@ -85,10 +80,10 @@ export function EndsTag({ deal, compact }: { deal: Deal; compact?: boolean }) {
 export function Price({ deal, size = 'l' }: { deal: Deal; size?: 'l' | 'm' }) {
   return (
     <View style={styles.priceRow}>
-      <AppText variant={size === 'l' ? 'title' : 'heading'} weight="800">
+      <AppText variant={size === 'l' ? 'title' : 'heading'} weight="800" tone={color.gold} style={size === 'l' ? { fontSize: 26, lineHeight: 30 } : undefined}>
         {rupees(deal.price)}
       </AppText>
-      <AppText variant="small" tone={color.muted} style={textStyles.strike} accessibilityLabel={`MRP ${rupees(deal.mrp)}`}>
+      <AppText variant="small" tone={color.faint} style={textStyles.strike} accessibilityLabel={`MRP ${rupees(deal.mrp)}`}>
         {rupees(deal.mrp)}
       </AppText>
     </View>
@@ -100,10 +95,10 @@ function ShopLine({ deal }: { deal: Deal }) {
   const shop = shopById[deal.shopId];
   return (
     <View style={styles.shopLine}>
-      <AppText variant="label" tone={color.inkSoft} numberOfLines={1} style={{ flexShrink: 1 }}>
+      <AppText variant="small" weight="600" tone={color.muted} numberOfLines={1} style={{ flexShrink: 1 }}>
         {pick(shop, 'name', 'nameHi', state.lang)}
       </AppText>
-      {shop.verified && <BadgeCheck size={16} color={color.navy} strokeWidth={2.4} />}
+      {shop.verified && <BadgeCheck size={14} color={color.navy} strokeWidth={2.4} />}
     </View>
   );
 }
@@ -114,7 +109,7 @@ function MetaLine({ deal, showOpen = true }: { deal: Deal; showOpen?: boolean })
   const open = isOpen(shop);
   return (
     <View style={styles.meta}>
-      <Star size={14} color={color.star} fill={color.star} strokeWidth={0} />
+      <Star size={13} color={color.star} fill={color.star} strokeWidth={0} />
       <AppText variant="small" weight="700">
         {shop.rating.toFixed(1)}
       </AppText>
@@ -122,17 +117,13 @@ function MetaLine({ deal, showOpen = true }: { deal: Deal; showOpen?: boolean })
         {t('reviews', { n: shop.reviews })}
       </AppText>
       <Dot />
-      <AppText variant="small" tone={color.inkSoft} weight="600">
-        {kmLabel(shop.km)}
-      </AppText>
-      <Dot />
-      <AppText variant="small" tone={color.muted} numberOfLines={1} style={{ flexShrink: 1 }}>
-        {travel(shop, t)}
+      <AppText variant="small" tone={color.inkSoft} weight="600" numberOfLines={1}>
+        {kmLabel(shop.km)} · {travel(shop, t)}
       </AppText>
       {showOpen && !open && (
         <>
           <Dot />
-          <AppText variant="small" tone={color.danger} weight="600">
+          <AppText variant="small" tone={color.danger} weight="600" numberOfLines={1}>
             {t('closed')}
           </AppText>
         </>
@@ -145,7 +136,24 @@ function openDeal(id: string) {
   router.push({ pathname: '/deal/[id]', params: { id } });
 }
 
-/* ---------- Feed card (Home) ---------- */
+/** Dark fade at the bottom of a photo so text on it stays readable. */
+export function Scrim({ from = 0.3 }: { from?: number }) {
+  return (
+    <Svg pointerEvents="none" width="100%" height="100%" style={StyleSheet.absoluteFill}>
+      <Defs>
+        <LinearGradient id="scrim" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset={from} stopColor={color.paper} stopOpacity={0} />
+          <Stop offset="0.95" stopColor={color.paper} stopOpacity={0.95} />
+        </LinearGradient>
+      </Defs>
+      <Rect width="100%" height="100%" fill="url(#scrim)" />
+    </Svg>
+  );
+}
+
+/* ---------- Feed card (Home): a ticket, photo on top, notches at the seam ---------- */
+
+const FEED_PHOTO = 184;
 
 export function DealCard({ deal }: { deal: Deal }) {
   const { state, dispatch, t, haptic, showToast } = useStore();
@@ -159,55 +167,64 @@ export function DealCard({ deal }: { deal: Deal }) {
       scaleTo={0.985}
       accessibilityRole="link"
       accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}, ${pctOff(deal)}% off, ${kmLabel(shop.km)}`}
-      style={styles.feed}>
-      <View style={styles.feedImgWrap}>
-        <Image alt={deal.title} source={images[deal.image]} style={styles.feedImg} contentFit="cover" transition={200} accessibilityIgnoresInvertColors />
-        <OffBadge deal={deal} style={styles.offPos} />
-        <View style={styles.savePos}>
-          <SaveButton dealId={deal.id} />
-        </View>
-      </View>
-      <View style={styles.feedBody}>
-        <ShopLine deal={deal} />
-        <AppText variant="heading" numberOfLines={2}>
-          {title}
-        </AppText>
-        <AppText variant="small" tone={color.muted} numberOfLines={1}>
-          {pick(deal, 'unit', 'unitHi', state.lang)}
-        </AppText>
-        <MetaLine deal={deal} />
-        <View style={styles.feedFoot}>
-          <View style={{ flex: 1, gap: 2 }}>
-            <Price deal={deal} />
-            <EndsTag deal={deal} compact />
-          </View>
-          <Pressy
-            onPress={() => {
-              dispatch({ type: 'cartAdd', id: deal.id });
-              haptic('success');
-              showToast({ message: `${title} · ${t('added')}` });
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={`${t('addToCart')}: ${title}`}
-            scaleTo={0.92}
-            style={[styles.add, inCart && styles.addOn]}>
-            <Plus size={18} color={inCart ? color.orangeDeep : '#FFFFFF'} strokeWidth={2.6} />
-            <AppText variant="label" weight="700" tone={inCart ? color.orangeDeep : '#FFFFFF'}>
-              {inCart ? `${state.cart[deal.id]} ${t('inCart')}` : t('add')}
+      style={styles.feedWrap}>
+      <Ticket notch={{ axis: 'y', at: FEED_PHOTO + 14 }} notchR={12} radius={radius.xl} colors={[color.cardHi, color.card]}>
+        <View style={styles.feedImgWrap}>
+          <Photo k={deal.image} alt={deal.title} style={styles.feedImg} />
+          <OffBadge deal={deal} style={styles.offPos} />
+          <View style={styles.distPos}>
+            <Navigation size={12} color={color.ink} strokeWidth={2.6} />
+            <AppText variant="micro" tone={color.ink}>
+              {kmLabel(shop.km)}
             </AppText>
-          </Pressy>
+          </View>
+          <View style={styles.savePos}>
+            <SaveButton dealId={deal.id} />
+          </View>
         </View>
-      </View>
+        <View style={styles.feedBody}>
+          <ShopLine deal={deal} />
+          <AppText variant="heading" weight="800" numberOfLines={2} style={{ letterSpacing: -0.3 }}>
+            {title}
+          </AppText>
+          <AppText variant="small" tone={color.muted} numberOfLines={1}>
+            {pick(deal, 'unit', 'unitHi', state.lang)}
+          </AppText>
+          <MetaLine deal={deal} />
+          <View style={styles.feedFoot}>
+            <View style={{ flex: 1, gap: 6 }}>
+              <Price deal={deal} />
+              <EndsTag deal={deal} compact />
+            </View>
+            <Pressy
+              onPress={() => {
+                dispatch({ type: 'cartAdd', id: deal.id });
+                haptic('success');
+                showToast({ message: `${title} · ${t('added')}` });
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`${t('addToCart')}: ${title}`}
+              scaleTo={0.92}
+              style={[styles.add, inCart && styles.addOn]}>
+              <Plus size={18} color={inCart ? color.gold : color.onGold} strokeWidth={2.6} />
+              <AppText variant="label" weight="800" tone={inCart ? color.gold : color.onGold}>
+                {inCart ? `${state.cart[deal.id]} ${t('inCart')}` : t('add')}
+              </AppText>
+            </Pressy>
+          </View>
+        </View>
+      </Ticket>
     </Pressy>
   );
 }
 
-/* ---------- Rail card (horizontal lists) ---------- */
+/* ---------- Rail card: tall photo, text on a scrim ---------- */
 
-export function RailCard({ deal, width = 212 }: { deal: Deal; width?: number }) {
-  const { state } = useStore();
+export function RailCard({ deal, width = 156 }: { deal: Deal; width?: number }) {
+  const { state, t } = useStore();
   const title = pick(deal, 'title', 'titleHi', state.lang);
   const shop = shopById[deal.shopId];
+  const e = endsLabel(deal, t, state.lang);
   return (
     <Pressy
       onPress={() => openDeal(deal.id)}
@@ -215,37 +232,29 @@ export function RailCard({ deal, width = 212 }: { deal: Deal; width?: number }) 
       accessibilityRole="link"
       accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}`}
       style={[styles.rail, { width }]}>
-      <View>
-        <Image alt={deal.title} source={images[deal.image]} style={styles.railImg} contentFit="cover" transition={200} />
-        <OffBadge deal={deal} style={styles.offPosSmall} />
-        <View style={styles.savePosSmall}>
-          <SaveButton dealId={deal.id} />
-        </View>
-      </View>
-      <View style={{ padding: space.m, gap: 2 }}>
-        <AppText variant="bodyStrong" numberOfLines={1}>
+      <Photo k={deal.image} alt={deal.title} style={StyleSheet.absoluteFill} art={0.5} />
+      <Scrim />
+      {e.urgent && <EmberChip label={e.text} style={styles.railChip} />}
+      <View style={styles.railText}>
+        <AppText variant="title" weight="800" tone={color.gold} style={{ fontSize: 22, lineHeight: 26, letterSpacing: -0.6 }}>
+          {rupees(deal.price)}
+        </AppText>
+        <AppText variant="label" weight="700" numberOfLines={1}>
           {title}
         </AppText>
-        <AppText variant="small" tone={color.inkSoft} numberOfLines={1}>
+        <AppText variant="small" tone={color.muted} numberOfLines={1}>
           {pick(shop, 'name', 'nameHi', state.lang)} · {kmLabel(shop.km)}
         </AppText>
-        <View style={[styles.priceRow, { marginTop: 4 }]}>
-          <AppText variant="heading" weight="800">
-            {rupees(deal.price)}
-          </AppText>
-          <AppText variant="small" tone={color.muted} style={textStyles.strike}>
-            {rupees(deal.mrp)}
-          </AppText>
-        </View>
-        <EndsTag deal={deal} compact />
       </View>
     </Pressy>
   );
 }
 
-/* ---------- Row card (History) ---------- */
+/* ---------- Row card (History): a ticket stub, photo | perforation | details ---------- */
 
-export function RowCard({ deal, trailing, dim }: { deal: Deal; trailing?: React.ReactNode; dim?: boolean }) {
+const STUB = 96;
+
+export function RowCard({ deal, trailing, dim, glow, ends }: { deal: Deal; trailing?: React.ReactNode; dim?: boolean; glow?: boolean; ends?: boolean }) {
   const { state } = useStore();
   const title = pick(deal, 'title', 'titleHi', state.lang);
   const shop = shopById[deal.shopId];
@@ -255,75 +264,76 @@ export function RowCard({ deal, trailing, dim }: { deal: Deal; trailing?: React.
       scaleTo={0.985}
       accessibilityRole="link"
       accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}`}
-      style={[styles.row, dim && { opacity: 0.6 }]}>
-      <Image alt={deal.title} source={images[deal.image]} style={styles.rowImg} contentFit="cover" transition={200} />
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText variant="bodyStrong" numberOfLines={2}>
-          {title}
-        </AppText>
-        <AppText variant="small" tone={color.inkSoft} numberOfLines={1}>
-          {pick(shop, 'name', 'nameHi', state.lang)} · {kmLabel(shop.km)}
-        </AppText>
-        <View style={[styles.priceRow, { marginTop: 2 }]}>
-          <AppText variant="bodyStrong" weight="800">
-            {rupees(deal.price)}
+      style={glow ? styles.rowGlow : undefined}>
+      <Ticket
+        notch={{ axis: 'x', at: STUB }}
+        notchR={9}
+        radius={radius.l + 2}
+        dim={dim}
+        border={glow ? 'rgba(255,122,26,0.45)' : 'rgba(255,255,255,0.1)'}
+        colors={['#1B1650', '#121037']}
+        style={styles.row}>
+        <Photo k={deal.image} alt={deal.title} style={[styles.rowImg, dim && { opacity: 0.45 }]} art={0.7} />
+        <View style={[styles.rowBody, dim && { opacity: 0.55 }]}>
+          <AppText variant="small" weight="600" tone={color.muted} numberOfLines={1}>
+            {pick(shop, 'name', 'nameHi', state.lang)} · {kmLabel(shop.km)}
           </AppText>
-          <AppText variant="small" tone={color.muted} style={textStyles.strike}>
-            {rupees(deal.mrp)}
+          <AppText variant="bodyStrong" numberOfLines={1}>
+            {title}
           </AppText>
-          <View style={styles.pctPill}>
-            <AppText variant="micro" tone={color.orangeDeep}>
-              {pctOff(deal)}%
+          <View style={[styles.priceRow, { marginTop: 4 }]}>
+            <AppText variant="title" weight="800" tone={dim ? color.inkSoft : color.gold} style={{ fontSize: 21, lineHeight: 24, letterSpacing: -0.5 }}>
+              {rupees(deal.price)}
+            </AppText>
+            <AppText variant="small" tone={color.faint} style={textStyles.strike}>
+              {rupees(deal.mrp)}
             </AppText>
           </View>
+          {ends && (
+            <View style={{ marginTop: 6 }}>
+              <EndsTag deal={deal} compact />
+            </View>
+          )}
         </View>
-        <EndsTag deal={deal} compact />
-      </View>
-      {trailing}
+        <View style={styles.rowSide}>{trailing}</View>
+      </Ticket>
     </Pressy>
   );
 }
 
 const styles = StyleSheet.create({
   save: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  saveFloat: { backgroundColor: 'rgba(255,255,255,0.94)', ...shadow.card },
-  savePlain: { backgroundColor: color.sunk },
+  saveFloat: { backgroundColor: 'rgba(5,6,26,0.62)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)' },
+  savePlain: { backgroundColor: 'transparent' },
   off: {
-    backgroundColor: color.orangeStrong,
+    backgroundColor: color.orange,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: radius.s,
+    borderRadius: 7,
   },
   offPos: { position: 'absolute', top: space.m, left: space.m },
-  offPosSmall: { position: 'absolute', top: space.s, left: space.s },
-  savePos: { position: 'absolute', top: space.s, right: space.s },
-  savePosSmall: { position: 'absolute', top: 4, right: 4, transform: [{ scale: 0.9 }] },
-  ends: {
+  distPos: {
+    position: 'absolute',
+    left: space.m,
+    bottom: space.m,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    gap: 5,
+    height: 26,
+    paddingHorizontal: 10,
     borderRadius: radius.pill,
-    backgroundColor: color.sunk,
+    backgroundColor: 'rgba(5,6,26,0.66)',
   },
-  endsUrgent: { backgroundColor: color.orangeTint },
+  savePos: { position: 'absolute', top: space.s, right: space.s },
+  savePosSmall: { position: 'absolute', top: 6, right: 6, transform: [{ scale: 0.88 }] },
+  ends: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
   priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: space.s },
   shopLine: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   meta: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4, flexWrap: 'nowrap' },
-  feed: {
-    backgroundColor: color.card,
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    borderColor: color.line,
-    overflow: 'hidden',
-    marginHorizontal: space.xl,
-    ...shadow.card,
-  },
-  feedImgWrap: { aspectRatio: 16 / 9, backgroundColor: color.sunk },
+  feedWrap: { marginHorizontal: space.xl },
+  feedImgWrap: { height: FEED_PHOTO, margin: 8, marginBottom: 0, borderRadius: radius.l, overflow: 'hidden', backgroundColor: color.sunk },
   feedImg: { width: '100%', height: '100%' },
-  feedBody: { padding: space.l, gap: 2 },
+  feedBody: { paddingHorizontal: space.l, paddingTop: 26, paddingBottom: space.l, gap: 2 },
   feedFoot: { flexDirection: 'row', alignItems: 'flex-end', marginTop: space.m, gap: space.m },
   add: {
     flexDirection: 'row',
@@ -332,27 +342,15 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: space.l,
     borderRadius: radius.pill,
-    backgroundColor: color.orangeStrong,
+    backgroundColor: color.gold,
   },
-  addOn: { backgroundColor: color.orangeTint },
-  rail: {
-    backgroundColor: color.card,
-    borderRadius: radius.l,
-    borderWidth: 1,
-    borderColor: color.line,
-    overflow: 'hidden',
-  },
-  railImg: { width: '100%', aspectRatio: 4 / 3, backgroundColor: color.sunk },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.m,
-    padding: space.m,
-    backgroundColor: color.card,
-    borderRadius: radius.l,
-    borderWidth: 1,
-    borderColor: color.line,
-  },
-  rowImg: { width: 76, height: 76, borderRadius: radius.m, backgroundColor: color.sunk },
-  pctPill: { backgroundColor: color.orangeTint, paddingHorizontal: 6, paddingVertical: 1, borderRadius: radius.s },
+  addOn: { backgroundColor: color.goldTint, borderWidth: 1, borderColor: color.goldLine },
+  rail: { height: 200, borderRadius: radius.xl, overflow: 'hidden', borderWidth: 1, borderColor: color.line, backgroundColor: color.card },
+  railChip: { position: 'absolute', top: 10, left: 10, backgroundColor: 'rgba(5,6,26,0.66)' },
+  railText: { position: 'absolute', left: 12, right: 12, bottom: 12, gap: 2 },
+  row: { flexDirection: 'row', alignItems: 'center', minHeight: 112 },
+  rowGlow: { shadowColor: color.orange, shadowOpacity: 0.55, shadowRadius: 18, shadowOffset: { width: 0, height: 4 }, elevation: 0 },
+  rowImg: { width: STUB - 12, height: 100, margin: 6, marginRight: 0, borderRadius: radius.m + 2 },
+  rowBody: { flex: 1, paddingLeft: 18, paddingRight: 4, gap: 2, minWidth: 0 },
+  rowSide: { paddingRight: 12, alignItems: 'flex-end', gap: 8 },
 });

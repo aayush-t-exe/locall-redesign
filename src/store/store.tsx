@@ -46,7 +46,7 @@ const initialState: State = {
     { q: 'momos', at: now - 2 * 60 * MIN, results: 1 },
     { q: 'cotton kurta', at: now - 26 * 60 * MIN, results: 1 },
     { q: 'salon', at: now - 3 * 24 * 60 * MIN, results: 1 },
-    { q: 'steel tiffin', at: now - 5 * 24 * 60 * MIN, results: 1 },
+    { q: 'steel bartan', at: now - 5 * 24 * 60 * MIN, results: 1 },
   ],
   viewed: [
     { id: 'd-kaju', at: now - 15 * MIN },
@@ -72,6 +72,7 @@ type Action =
   | { type: 'cartAdd'; id: string }
   | { type: 'cartRemove'; id: string }
   | { type: 'reserve'; code: string }
+  | { type: 'claim'; id: string; code: string }
   | { type: 'setNewUser'; on: boolean }
   | { type: 'reset' };
 
@@ -136,6 +137,23 @@ function reducer(state: State, action: Action): State {
         };
       });
       return { ...state, cart: {}, orders: [...newOrders, ...state.orders] };
+    }
+    case 'claim': {
+      // One claim per deal: using the ticket at the counter becomes a reserved order.
+      if (state.orders.some((o) => o.dealId === action.id && o.status === 'reserved')) return state;
+      const d = dealById[action.id];
+      if (!d) return state;
+      const order: Order = {
+        id: `o-${Date.now()}`,
+        dealId: d.id,
+        dateLabel: 'Today',
+        dateLabelHi: 'आज',
+        saved: d.mrp - d.price,
+        paid: d.price,
+        status: 'reserved',
+        code: action.code,
+      };
+      return { ...state, orders: [order, ...state.orders] };
     }
     case 'setNewUser': {
       if (action.on === state.newUser) return state;

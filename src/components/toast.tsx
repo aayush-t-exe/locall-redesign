@@ -21,8 +21,8 @@ export function Toast({ bottom }: { bottom: number }) {
         style={styles.toast}
         accessibilityLiveRegion="polite"
         accessibilityRole="alert">
-        <CheckCircle2 size={20} color="#7DD99B" strokeWidth={2.4} />
-        <AppText variant="label" tone="#FFFFFF" style={{ flex: 1 }} numberOfLines={2}>
+        <CheckCircle2 size={20} color={color.success} strokeWidth={2.4} />
+        <AppText variant="label" tone={color.ink} style={{ flex: 1 }} numberOfLines={2}>
           {toast.message}
         </AppText>
         {toast.actionLabel && toast.onAction && (
@@ -34,7 +34,7 @@ export function Toast({ bottom }: { bottom: number }) {
             hitSlop={10}
             accessibilityRole="button"
             style={styles.action}>
-            <AppText variant="label" weight="800" tone="#FFB37A">
+            <AppText variant="label" weight="800" tone={color.gold}>
               {toast.actionLabel}
             </AppText>
           </Pressable>
@@ -52,7 +52,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.m,
-    backgroundColor: color.ink,
+    backgroundColor: color.cardHi,
+    borderWidth: 1,
+    borderColor: color.goldLine,
     borderRadius: radius.l,
     paddingVertical: space.m,
     paddingLeft: space.l,

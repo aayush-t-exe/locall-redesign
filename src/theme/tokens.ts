@@ -1,38 +1,52 @@
 /**
- * Locall design tokens.
- * Colours are sampled from the Locall logo (navy ribbon + orange pin) and website.
- * Contrast ratios are against `paper` / `card` unless noted.
+ * Locall Night design tokens.
+ * Deep navy night (the logo's navy taken to its darkest), brand orange as warm light,
+ * gold for money. One glowing object per screen. Contrast ratios are against `paper`.
+ * Key names are kept from v1 so every screen picks up the palette.
  */
 export const color = {
-  // Brand
-  orange: '#FF6B00', // logo orange: pins, indicators, decoration. White on it is 2.86:1, so no text on it
-  orangeStrong: '#CF4A0C', // buttons + discount badges with white text: 4.53:1
-  orangePressed: '#B23F0A',
-  orangeText: '#C2410C', // orange for text and icons on white: 5.18:1 (4.99 on paper)
-  orangeDeep: '#9A3412', // text on orangeTint: 6.75:1
-  orangeTint: '#FFF1E5',
-  navy: '#0A2F8F', // brand navy, links and selected states: 11.2:1
-  navyTint: '#EAF0FC',
+  // Brand light
+  orange: '#FF7A1A', // ember: dots, glows, the % OFF badge fill (dark text on it: 7.9:1)
+  orangeStrong: '#FF7A1A',
+  orangePressed: '#E0640D',
+  orangeText: '#FFB27A', // ember text on night: 10.6:1
+  orangeDeep: '#FFB27A',
+  orangeTint: 'rgba(255,122,26,0.14)',
+  navy: '#A9B6FF', // links and selected states on night: 9.4:1
+  navyTint: 'rgba(91,75,255,0.16)',
+
+  // Gold: money, active states, the one glowing object
+  gold: '#F6CF72', // 13.1:1
+  goldLight: '#FFF3CF',
+  goldDeep: '#D99A33',
+  goldTint: 'rgba(246,207,114,0.14)',
+  goldLine: 'rgba(246,207,114,0.32)',
+  onGold: '#1C1200', // text on gold fills
+
+  // Night
+  violet: '#5B4BFF',
+  blue: '#2F55FF',
 
   // Neutrals
-  ink: '#0B1F4D', // primary text: 15.4:1
-  inkSoft: '#3A4767', // secondary text: 8.9:1
-  muted: '#5A6378', // tertiary text: 5.8:1
-  faint: '#8A92A6', // decorative / disabled only (3.1:1, never text)
-  line: '#EDE3D8',
-  lineStrong: '#DCCFC0',
-  paper: '#FFFAF5', // app background, warm
-  card: '#FFFFFF',
-  sunk: '#F6EEE5', // inputs, chips at rest
+  ink: '#F6F3EC', // primary text: 18.2:1
+  inkSoft: '#D3D1E3', // secondary text: 13.4:1
+  muted: '#A3A3BE', // tertiary text: 7.9:1
+  faint: '#6E6E8C', // decorative / disabled only
+  line: 'rgba(255,255,255,0.08)',
+  lineStrong: 'rgba(255,255,255,0.16)',
+  paper: '#05061A', // app background
+  card: '#0F1030', // raised surfaces
+  cardHi: '#171746', // ticket tops, highlighted surfaces
+  sunk: 'rgba(255,255,255,0.06)', // inputs, chips at rest, glass
 
   // Status
-  success: '#15803D', // "Open now", verified: 5.0:1 (4.5 on successTint)
-  successTint: '#E8F6EC',
-  danger: '#B91C1C',
-  dangerTint: '#FDECEC',
-  star: '#F5A524',
-  whatsapp: '#0E7A41', // darker than WhatsApp green so white text passes: 5.4:1
-  overlay: 'rgba(11,31,77,0.45)',
+  success: '#5BE3A8',
+  successTint: 'rgba(91,227,168,0.12)',
+  danger: '#FF8A8A',
+  dangerTint: 'rgba(255,90,90,0.12)',
+  star: '#F6CF72',
+  whatsapp: '#1F9D57',
+  overlay: 'rgba(2,3,12,0.72)',
 } as const;
 
 export const space = { xxs: 2, xs: 4, s: 8, m: 12, l: 16, xl: 20, xxl: 24, xxxl: 32, huge: 48 } as const;
@@ -41,7 +55,7 @@ export const radius = { s: 8, m: 12, l: 16, xl: 20, xxl: 28, pill: 999 } as cons
 
 /** Type scale (sp). Body never below 14; primary body 16. */
 export const type = {
-  display: { size: 28, line: 34, weight: '800' },
+  display: { size: 30, line: 36, weight: '800' },
   title: { size: 22, line: 28, weight: '800' },
   heading: { size: 18, line: 24, weight: '700' },
   body: { size: 16, line: 24, weight: '500' },
@@ -53,20 +67,30 @@ export const type = {
 
 export type TypeVariant = keyof typeof type;
 
+/** Serif accent for the luxe words ("your saved steals", "you saved"). Latin only. */
+export const serif = { regular: 'InstrumentSerif_400Regular', italic: 'InstrumentSerif_400Regular_Italic' } as const;
+
 export const shadow = {
   card: {
-    shadowColor: '#0B1F4D',
-    shadowOpacity: 0.07,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    shadowColor: '#000000',
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
   },
   raised: {
-    shadowColor: '#0B1F4D',
-    shadowOpacity: 0.14,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 8,
+    shadowColor: '#000000',
+    shadowOpacity: 0.55,
+    shadowRadius: 28,
+    shadowOffset: { width: 0, height: 14 },
+    elevation: 10,
+  },
+  glowGold: {
+    shadowColor: '#F6CF72',
+    shadowOpacity: 0.5,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 0,
   },
 } as const;
 
