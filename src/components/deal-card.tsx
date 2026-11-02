@@ -166,7 +166,6 @@ export function DealCard({ deal }: { deal: Deal }) {
       onPress={() => openDeal(deal.id)}
       scaleTo={0.985}
       accessibilityRole="link"
-      accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}, ${pctOff(deal)}% off, ${kmLabel(shop.km)}`}
       style={styles.feedWrap}>
       <Ticket notch={{ axis: 'y', at: FEED_PHOTO + 14 }} notchR={12} radius={radius.xl} colors={[color.cardHi, color.card]}>
         <View style={styles.feedImgWrap}>
@@ -230,7 +229,6 @@ export function RailCard({ deal, width = 156 }: { deal: Deal; width?: number }) 
       onPress={() => openDeal(deal.id)}
       scaleTo={0.97}
       accessibilityRole="link"
-      accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}`}
       style={[styles.rail, { width }]}>
       <Photo k={deal.image} alt={deal.title} style={StyleSheet.absoluteFill} art={0.5} />
       <Scrim />
@@ -263,7 +261,6 @@ export function RowCard({ deal, trailing, dim, glow, ends }: { deal: Deal; trail
       onPress={() => openDeal(deal.id)}
       scaleTo={0.985}
       accessibilityRole="link"
-      accessibilityLabel={`${title}, ${shop.name}, ${rupees(deal.price)}`}
       style={glow ? styles.rowGlow : undefined}>
       <Ticket
         notch={{ axis: 'x', at: STUB }}

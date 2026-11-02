@@ -5,7 +5,7 @@
  */
 import { Image, type ImageStyle } from 'expo-image';
 import { type ReactNode, useId, useState } from 'react';
-import { type LayoutChangeEvent, type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { type LayoutChangeEvent, Platform, type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import Svg, { Defs, Ellipse, Line, LinearGradient, Path, RadialGradient, Rect, Stop, Text as SvgText } from 'react-native-svg';
 
 import { artFor, gold3d, type Gold3dKey, type ImageKey, images } from '@/data/images';
@@ -82,7 +82,9 @@ export function Halo({ colors = [color.orange, color.violet], style }: { colors?
 
 export function Photo({ k, alt, style, art = 0.62 }: { k: ImageKey; alt: string; style?: StyleProp<ImageStyle>; art?: number }) {
   const src = images[k];
-  if (src) return <Image alt={alt} source={src} style={style} contentFit="cover" transition={200} accessibilityIgnoresInvertColors />;
+  // On the web, expo-image's cross-fade adds a second <img> without the alt, so the fade is native-only.
+  // expo-image on the web writes the <img> alt from accessibilityLabel, so pass both.
+  if (src) return <Image alt={alt} accessibilityLabel={alt} source={src} style={style} contentFit="cover" transition={Platform.OS === 'web' ? undefined : 200} accessibilityIgnoresInvertColors />;
   return <GoldArt icon={artFor[k]} alt={alt} style={style as StyleProp<ViewStyle>} scale={art} />;
 }
 
@@ -114,8 +116,13 @@ export function GoldArt({ icon, alt, style, scale = 0.62 }: { icon: Gold3dKey; a
   );
 }
 
+/** Decorative gold 3D object. Hidden from screen readers: the label next to it says what it is. */
 export function Gold3D({ k, size, style }: { k: Gold3dKey; size: number; style?: StyleProp<ImageStyle> }) {
-  return <Image source={gold3d[k]} style={[{ width: size, height: size }, style]} contentFit="contain" alt="" accessible={false} />;
+  return (
+    <View aria-hidden style={style as StyleProp<ViewStyle>} pointerEvents="none">
+      <Image source={gold3d[k]} style={{ width: size, height: size }} contentFit="contain" alt="" accessible={false} />
+    </View>
+  );
 }
 
 /* ---------- Ticket: a rounded card with real notches and a perforation ---------- */

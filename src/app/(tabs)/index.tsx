@@ -101,7 +101,7 @@ export default function Home() {
             onPress={() => setSheet('area')}
             style={styles.area}
             accessibilityRole="button"
-            accessibilityLabel={`${t('deliverTo')}: ${area.name}`}
+            accessibilityHint={t('areaTitle')}
             hitSlop={6}>
             <View style={styles.areaLine}>
               <AppText variant="title" numberOfLines={1} style={{ flexShrink: 1, fontSize: 19, letterSpacing: -0.4 }}>
@@ -117,7 +117,7 @@ export default function Home() {
             </View>
           </Pressable>
           <IconButton icon={ShoppingBag} label={t('cart')} badge={cartCount} size={42} onPress={() => setSheet('cart')} />
-          <Pressy onPress={() => router.navigate('/profile')} scaleTo={0.9} accessibilityRole="button" accessibilityLabel={t('tabProfile')} style={styles.avaRing}>
+          <Pressy onPress={() => router.navigate('/profile')} scaleTo={0.9} accessibilityRole="button" accessibilityLabel={`${initials} · ${t('tabProfile')}`} style={styles.avaRing}>
             <View style={styles.ava}>
               <AppText variant="label" weight="800">
                 {initials}
@@ -240,7 +240,6 @@ export default function Home() {
               onPress={() => router.push({ pathname: '/shop/[id]', params: { id: spot.id } })}
               scaleTo={0.985}
               accessibilityRole="link"
-              accessibilityLabel={`${spot.name}. ${spot.quote}`}
               style={styles.spot}>
               <Photo k={spot.ownerImage ?? spot.image} alt={spot.owner} style={styles.spotImg} />
               <View style={styles.spotBody}>
@@ -309,8 +308,7 @@ function StealTicket({ deal }: { deal: Deal }) {
         <Pressy
           onPress={() => router.push({ pathname: '/deal/[id]', params: { id: deal.id } })}
           scaleTo={0.98}
-          accessibilityRole="link"
-          accessibilityLabel={`${t('tonightSteal')}: ${title}, ${shop.name}, ${rupees(deal.price)}, ${pctOff(deal)}% off`}>
+          accessibilityRole="link">
           <Ticket notch={{ axis: 'x', at: 0.57 }} height={196} radius={22} colors={['#231C60', '#100E30']} border="rgba(255,255,255,0.14)">
             <View style={styles.heroLeft}>
               <EmberChip label={e.text} />

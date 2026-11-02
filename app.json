@@ -26,15 +26,15 @@
       "favicon": "./assets/images/favicon.png",
       "name": "Locall redesign prototype",
       "shortName": "Locall",
-      "themeColor": "#FFFAF5",
-      "backgroundColor": "#FFFAF5"
+      "themeColor": "#05061A",
+      "backgroundColor": "#05061A"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#FFFAF5",
+          "backgroundColor": "#05061A",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 96
         }
