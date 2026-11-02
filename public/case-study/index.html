@@ -3,868 +3,686 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Locall redesign · Aayush Thakur</title>
-<meta name="description" content="A redesign of Locall's Home, History and Profile screens, built as a working Expo app, with the audit, design system, components, journeys and UX suggestions.">
-<meta property="og:title" content="Locall redesign · Aayush Thakur">
-<meta property="og:description" content="Home, History and Profile, redesigned so finding a deal from the shop next door takes one screen. Working Expo app inside.">
-<meta property="og:image" content="img/og.jpg">
-<meta name="theme-color" content="#FFFAF5">
+<title>Locall, redesigned · Home, History and Profile</title>
+<meta name="description" content="A redesign of Locall's Home, History and Profile, built as a working Expo app. Audit, before and after, colour and type, components, guidelines, a playable prototype and next steps.">
+<link rel="canonical" href="https://locall-redesign.vercel.app/case-study/">
+<meta name="theme-color" content="#F2ECDF">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Locall, redesigned">
+<meta property="og:description" content="Home, History and Profile, redesigned and built as a working Expo app you can play with.">
+<meta property="og:url" content="https://locall-redesign.vercel.app/case-study/">
+<meta property="og:image" content="https://locall-redesign.vercel.app/case-study/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://locall-redesign.vercel.app/case-study/img/og.jpg">
 <link rel="icon" href="img/mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&family=Noto+Sans+Devanagari:wght@500;700&family=Kaushan+Script&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500&text=atheounrldsfgcikmpvwxy%E2%86%93,.%27&display=swap" media="print" onload="this.media='all'">
+<link rel="preload" as="image" href="img/momos.webp" type="image/webp">
+<script>document.documentElement.classList.add('js')</script>
 <style>
-/* Tokens mirror src/theme/tokens.ts. Contrast on paper: ink 15.4:1, inkSoft 8.9:1, muted 5.8:1,
-   orangeText 4.99:1, navy 11.2:1. #FF6B00 is 2.86:1 with white: fills and decoration only. */
+/* Self-hosted latin subsets (OFL), preloaded above. Specimen fonts load later from Google, non-blocking. */
+@font-face{font-family:"Archivo";src:url(fonts/archivo-latin.woff2) format("woff2");font-weight:600 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url(fonts/instrument-sans-latin.woff2) format("woff2");font-weight:400 700;font-display:swap}
+/* Durg Receipt: cream receipt paper, ink type, stamp blue. Ink bands hold the dark app screens.
+   Contrast (measured): ink on paper 15.7:1 · muted #5E584C 6.0:1 · blue text #2236C4 7.5:1 ·
+   white on blue 7.5:1 · paper on ink 15.7:1 · muted on ink #A79F92 7.1:1 · blue on ink #9DA9FF 8.4:1 */
 :root{
-  --orange:#FF6B00; --orange-strong:#CF4A0C; --orange-text:#C2410C; --orange-deep:#9A3412; --orange-tint:#FFF1E5;
-  --navy:#0A2F8F; --navy-tint:#EAF0FC; --ink:#0B1F4D; --ink-soft:#3A4767; --muted:#5A6378; --faint:#8A92A6;
-  --line:#EDE3D8; --line-strong:#DCCFC0; --paper:#FFFAF5; --card:#FFFFFF; --sunk:#F6EEE5; --success:#15803D; --success-tint:#E8F6EC;
-  --on-ink:#E3E8F4; --on-ink-muted:#AEB9D3;
-  --ease:cubic-bezier(.16,1,.3,1); --spring:cubic-bezier(.34,1.56,.64,1);
-  --wrap:1180px; --gut:clamp(16px,4vw,40px);
+  --paper:#F2ECDF;--paper2:#E8E0CF;--card:#FFFBF2;--ink:#16130F;--ink2:#211D18;
+  --mut:#5E584C;--mut-i:#A79F92;--blue:#2B3FD6;--blue-t:#2236C4;--blue-i:#9DA9FF;--dash:rgba(22,19,15,.28);--dash-i:rgba(242,236,223,.22);
+  --disp:"Archivo","Arial Narrow",system-ui,sans-serif;--body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--lux:"Fraunces",Georgia,serif;
+  --gut:max(20px,4vw);--max:1240px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
-body{background:var(--paper);color:var(--ink);font:500 17px/1.6 'Plus Jakarta Sans',system-ui,sans-serif;overflow-x:clip}
-img{max-width:100%;display:block}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit}
-:focus-visible{outline:3px solid var(--orange-text);outline-offset:3px;border-radius:6px}
-.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
-.hand{font-family:'Kaushan Script',cursive;color:var(--orange-text);font-size:clamp(20px,2.2vw,26px);line-height:1.1;display:block;margin-bottom:6px;transform:rotate(-2deg);transform-origin:left}
-.ink .hand{color:#FF9A55}
-h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.05}
-h2{font-size:clamp(34px,5.4vw,64px);max-width:16ch}
-h3{font-size:clamp(20px,2vw,24px);letter-spacing:-.01em;line-height:1.2}
-em{font-style:italic;color:var(--orange-text)}
-.ink em{color:#FF9A55}
-.lead{font-size:clamp(17px,1.6vw,20px);color:var(--ink-soft);max-width:60ch}
-.ink .lead{color:var(--on-ink)}
-.mono{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.02em}
-.hi{font-family:'Noto Sans Devanagari',sans-serif}
-section{position:relative;padding:clamp(72px,10vw,140px) 0}
-.ink{background:var(--ink);color:#fff}
-.tint{background:var(--orange-tint)}
-.curve-top::before{content:'';position:absolute;left:0;right:0;bottom:calc(100% - 1px);height:clamp(2.5rem,7vw,6rem);background:inherit;border-radius:50% 50% 0 0/100% 100% 0 0;pointer-events:none}
-.grain{position:fixed;inset:-50%;z-index:90;pointer-events:none;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .15 0 0 0 0 .1 0 0 0 1.3 -.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.26;z-index:60;background:url(img/grain.png) 0 0/96px 96px}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:8px;z-index:99}
+.skip:focus{left:12px}
 
-/* Nav */
-.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:20px;height:64px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;white-space:nowrap}
-.brand img{width:30px;height:30px}
-.brand small{font-weight:600;color:var(--muted);font-size:14px}
-.nav ul{display:flex;gap:4px;list-style:none;margin-left:auto}
-.nav ul a{display:block;padding:8px 12px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;color:var(--ink-soft)}
-.nav ul a:hover{background:var(--sunk);color:var(--ink)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;background:var(--orange-strong);color:#fff;font-weight:800;font-size:16px;text-decoration:none;border:0;cursor:pointer;transition:transform .35s var(--spring),background .2s}
-.btn:hover{background:#B23F0A;transform:translateY(-2px)}
+/* nav */
+header{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:2px dashed var(--dash)}
+.nav{height:64px;display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font:800 16px var(--disp);font-stretch:105%;text-decoration:none;white-space:nowrap}
+.brand img{width:26px;height:26px}
+.nav ul{display:flex;gap:18px;list-style:none;margin:0 auto;font-size:14.5px;font-weight:500}
+.nav ul a{text-decoration:none;color:var(--mut);padding:10px 0}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:99px;font:600 15px var(--body);text-decoration:none;white-space:nowrap;cursor:pointer;border:0;transition:transform .15s}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line-strong)}
-.btn.ghost:hover{background:var(--card)}
-.ink .btn.ghost{color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}
-.ink .btn.ghost:hover{background:rgba(255,255,255,.08)}
-@media (max-width:980px){.nav ul{display:none}.nav .btn{margin-left:auto}}
-@media (max-width:420px){.brand small{display:none}}
+.btn.dark{background:var(--ink);color:var(--paper)}
+.btn.line{border:2px solid var(--ink);color:var(--ink);background:transparent}
+.btn.blue{background:var(--blue);color:#fff}
+.nav .btn{min-height:44px;padding:0 18px;font-size:14px}
 
-/* Hero */
-.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(80px,9vw,120px)}
-.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,72px);align-items:center}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--ink-soft)}
-.eyebrow b{background:var(--orange-tint);color:var(--orange-deep);padding:2px 10px;border-radius:999px}
-.hero h1{font-size:clamp(44px,7.4vw,96px);margin:22px 0 22px;max-width:12ch}
-.hero h1 .pin{display:inline-block;width:.62em;height:.62em;vertical-align:-.02em;margin-left:.06em}
-.proof{display:grid;grid-template-columns:repeat(4,auto);gap:10px 28px;margin:34px 0 34px;justify-content:start}
-.proof div{border-left:3px solid var(--orange);padding-left:12px}
-.proof strong{display:block;font-size:clamp(26px,3vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
-.proof span{font-size:14px;color:var(--muted);font-weight:600}
-.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.cta-row .note{font-size:14px;color:var(--muted)}
-@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}.proof{grid-template-columns:repeat(2,auto)}}
+/* hero */
+.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:28px;padding-top:40px;padding-bottom:40px;min-height:calc(100svh - 64px);max-height:900px;align-items:center}
+.stamp{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--blue);color:var(--blue-t);border-radius:8px;padding:6px 12px;font:800 12px var(--disp);letter-spacing:.12em;text-transform:uppercase;transform:rotate(-2deg)}
+h1{font:900 clamp(3rem,6.6vw,6.6rem)/.9 var(--disp);font-stretch:88%;letter-spacing:-.03em;text-transform:uppercase;margin-top:20px}
+h1 em,.lux{font-family:var(--lux);font-style:italic;font-weight:500;text-transform:none;letter-spacing:-.02em;color:var(--blue-t)}
+.lead{font-size:clamp(17px,1.4vw,19px);line-height:1.5;color:#3B362E;max-width:34em;margin-top:18px}
+.cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+.receipt{margin-top:24px;max-width:540px;list-style:none;font-size:15px}
+.receipt li a{display:flex;align-items:baseline;gap:8px;padding:6px 0;text-decoration:none;min-height:36px}
+.receipt li a:hover .what{text-decoration:underline;text-underline-offset:3px}
+.receipt b{font:800 14px var(--disp);width:16px;flex:none}
+.receipt i{flex:1;border-bottom:2px dotted var(--dash);transform:translateY(-4px);min-width:12px}
+.receipt .val{font:700 13.5px var(--disp);color:var(--blue-t);white-space:nowrap}
+.try{border-top:2px dashed var(--dash);margin-top:8px;padding-top:12px;font-size:15px;font-weight:600;max-width:540px}
+.try span{color:var(--mut);font-weight:500}
 
-/* Phone */
-.stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
-.stage .tilt,.stage>.phone{width:min(100%,380px)}
-.phone{position:relative;width:100%;aspect-ratio:9/19.2;border-radius:52px/46px;background:#0b0b0d;padding:11px;box-shadow:inset 0 0 0 1.5px #3a3633,inset 0 0 0 4px #121010,0 0 0 1px rgba(0,0,0,.6),0 50px 100px -30px rgba(11,31,77,.55),0 30px 60px -40px rgba(207,74,12,.5)}
-.phone-screen{position:relative;height:100%;overflow:hidden;border-radius:42px/38px;background:var(--paper);isolation:isolate}
-.phone-screen .vp{position:absolute;inset:34px 0 0 0;overflow:hidden;background:var(--paper)}
-.phone-screen .cycle,.vp>.shot{position:absolute;inset:0;z-index:2}
-.phone-screen iframe{position:absolute;top:0;left:0;z-index:1;width:390px;height:844px;border:0;transform-origin:0 0;background:var(--paper)}
-.phone-screen .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
-.phone-island{position:absolute;top:20px;left:50%;z-index:4;width:28%;height:24px;transform:translateX(-50%);border-radius:999px;background:#0b0b0d;pointer-events:none}
-.stage .tilt{transition:transform 1.2s var(--ease)}
-@media (min-width:901px) and (prefers-reduced-motion:no-preference){
-  .stage .tilt{transform:perspective(1600px) rotateY(-14deg) rotateX(6deg) rotate(2deg)}
-  .stage:hover .tilt,.stage.live .tilt{transform:none}
+.ticket-stage{position:relative;display:grid;justify-items:center;gap:14px}
+.ticket{width:min(380px,100%);transform:rotate(3deg);filter:drop-shadow(0 26px 32px rgba(40,30,10,.26));transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.ticket.used{transform:rotate(0)}
+.tbody{position:relative;background:var(--card);border-radius:22px;padding:12px;
+  --cut:296px;-webkit-mask:radial-gradient(circle 16px at 0 var(--cut),#0000 15.5px,#000 16px) left/51% 100% no-repeat,radial-gradient(circle 16px at 100% var(--cut),#0000 15.5px,#000 16px) right/51% 100% no-repeat;
+  mask:radial-gradient(circle 16px at 0 var(--cut),#0000 15.5px,#000 16px) left/51% 100% no-repeat,radial-gradient(circle 16px at 100% var(--cut),#0000 15.5px,#000 16px) right/51% 100% no-repeat}
+.tbody>img{width:100%;height:268px;object-fit:cover;border-radius:14px}
+.off{position:absolute;left:24px;top:24px;background:#FF7A1A;color:#1C1200;font:800 12px var(--disp);letter-spacing:.04em;padding:6px 9px;border-radius:7px}
+.tline{border-top:2px dashed var(--dash);margin:16px 6px 0}
+.tbody h2{font:800 22px/1.15 var(--disp);letter-spacing:-.02em;margin:14px 8px 2px}
+.tbody p{margin:0 8px;color:var(--mut);font-size:14.5px}
+.code{margin:14px 8px 4px;display:flex;align-items:center;justify-content:space-between;border:2px dashed var(--ink);border-radius:12px;padding:10px 14px;font:800 24px var(--disp);letter-spacing:.14em}
+.code small{font:600 12px var(--body);letter-spacing:0;color:var(--mut)}
+.slide{position:relative;margin:12px 8px 6px;height:60px;border-radius:18px;background:var(--ink);display:flex;align-items:center;padding:6px;color:var(--paper);font-weight:600;touch-action:none;user-select:none}
+.slide .lbl{position:absolute;inset:0;display:grid;place-items:center;padding-left:52px;pointer-events:none;transition:opacity .2s}
+.knob{position:relative;z-index:1;width:48px;height:48px;border-radius:13px;background:var(--blue);color:#fff;border:0;font:700 22px var(--body);cursor:grab;display:grid;place-items:center;touch-action:none}
+.knob:active{cursor:grabbing}
+.used-stamp{position:absolute;right:20px;top:150px;border:4px solid var(--blue);color:var(--blue-t);background:rgba(255,251,242,.9);border-radius:10px;padding:8px 14px;font:900 28px/1 var(--disp);letter-spacing:.06em;text-transform:uppercase;transform:rotate(-12deg) scale(1.6);opacity:0;pointer-events:none;transition:opacity .2s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.used-stamp small{display:block;font:700 13px var(--body);letter-spacing:0;text-transform:none;margin-top:4px;text-align:center}
+.ticket.used .used-stamp{opacity:1;transform:rotate(-12deg) scale(1)}
+.ticket.used .slide .lbl{opacity:0}
+.hand{font:italic 500 18px var(--lux);color:var(--blue-t);transform:rotate(-3deg)}
+.again{background:none;border:0;font:600 14px var(--body);color:var(--blue-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;min-height:44px;padding:0 8px}
+.note{font-size:13px;color:var(--mut)}
+
+/* sections */
+section{padding:96px 0}
+.ink{background:var(--ink);color:var(--paper);position:relative}
+.ink::before,.ink::after{content:"";position:absolute;left:0;right:0;height:14px;background:radial-gradient(circle 7px at 10px 0,var(--paper) 6.5px,transparent 7px) 0 0/20px 14px repeat-x}
+.ink::before{top:0}
+.ink::after{bottom:0;transform:scaleY(-1)}
+.ink + .ink::before{display:none}
+.ink .mut{color:var(--mut-i)}
+.mut{color:var(--mut)}
+h2.big{font:900 clamp(2.4rem,5vw,4.6rem)/.95 var(--disp);font-stretch:90%;letter-spacing:-.03em}
+.sec-lead{max-width:38em;margin-top:16px;font-size:18px}
+.ink .sec-lead{color:#D8D1C3}
+code{font:500 .9em ui-monospace,Consolas,monospace}
+
+/* a) line-item header */
+.lineitem{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.lineitem .ltr{font:900 clamp(4rem,9vw,8rem)/.8 var(--disp);color:var(--blue-t)}
+.lineitem .leader{flex:1;min-width:60px;border-bottom:3px dotted var(--dash);margin-bottom:14px}
+.lineitem .qty{font:800 16px var(--disp);margin-bottom:6px;white-space:nowrap}
+
+.ba{display:grid;gap:56px;margin-top:56px}
+.ba-row{display:grid;grid-template-columns:auto auto 1fr;gap:28px;align-items:center}
+.ba figure{position:relative}
+.ba figure img{width:230px;border-radius:26px;box-shadow:0 18px 30px -16px rgba(0,0,0,.35)}
+.ba figcaption{position:absolute;top:-12px;left:14px;font:800 11px var(--disp);letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:6px;z-index:1}
+.ba .before figcaption{background:var(--paper2);color:var(--ink);border:1.5px solid var(--dash)}
+.ba .after figcaption{background:var(--blue);color:#fff}
+.ba h3{font:900 34px/1 var(--disp);font-stretch:92%;letter-spacing:-.02em}
+.ba ul{margin-top:14px;list-style:none;display:grid;gap:10px;max-width:30em}
+.ba li{padding-left:28px;position:relative}
+.ba li::before{content:"✓";position:absolute;left:0;top:0;font-weight:800;color:var(--blue-t)}
+
+/* audit */
+.audit-head{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:end}
+.huge{font:900 clamp(7rem,16vw,15rem)/.78 var(--disp);font-stretch:80%;letter-spacing:-.05em}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.shot{position:relative;border-radius:26px;overflow:hidden;box-shadow:0 14px 28px -14px rgba(0,0,0,.35)}
+.pin{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font:800 13px/30px var(--disp);text-align:center;translate:-50% -50%;box-shadow:0 0 0 3px #fff}
+.shot-cap{text-align:center;font:700 13px var(--body);margin-top:10px;color:var(--mut-i)}
+.issues{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:0 32px;margin-top:40px}
+.issue{display:grid;grid-template-columns:32px 1fr;gap:12px;padding:16px 0;border-top:2px dashed var(--dash-i)}
+.issue .n{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font:800 13px/30px var(--disp);text-align:center}
+.issue p{margin-top:2px}
+.issue .fix{display:block;margin-top:6px;font-size:15px;color:var(--blue-i);font-weight:600}
+details{margin-top:24px}
+summary{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border-radius:99px;border:2px solid currentColor;font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-weight:800}
+details[open] summary::after{content:"–"}
+.cross{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.cross div{background:var(--ink2);border-radius:16px;padding:18px;border:1px solid var(--dash-i)}
+.cross h3{font:800 17px/1.2 var(--disp)}
+.cross p{font-size:15px;margin-top:6px;color:#D8D1C3}
+
+/* b) colour & type */
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.chip{border-radius:14px;overflow:hidden;background:var(--ink2);border:1px solid var(--dash-i)}
+.chip .sw{height:110px}
+.chip .meta{padding:12px 14px;font-size:14px}
+.chip .meta b{display:block;font:800 16px var(--disp)}
+.chip code{color:var(--mut-i)}
+.chip .cr{float:right;font:700 12px var(--disp);color:var(--paper);background:rgba(242,236,223,.12);padding:3px 7px;border-radius:6px}
+.types{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-top:20px}
+.spec{border-radius:16px;border:1px solid var(--dash-i);padding:22px}
+.spec .tag{font:700 12px var(--disp);letter-spacing:.1em;text-transform:uppercase;color:var(--mut-i)}
+.spec .s1{font:800 44px/1.05 "Plus Jakarta Sans",var(--body);letter-spacing:-.03em;margin-top:10px;color:#F6CF72}
+.spec .s2{font:italic 400 34px/1.1 "Instrument Serif",Georgia,serif;color:#D9CFB8;margin-top:6px}
+.spec .s3{font:500 26px/1.5 "Noto Sans Devanagari",var(--body);margin-top:6px}
+.spec p{margin-top:10px;font-size:15px;color:#D8D1C3}
+.scale{list-style:none;margin-top:12px;display:grid;gap:6px;font-size:15px}
+.scale li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--dash-i);padding-bottom:6px}
+
+/* c) components */
+.stamp-head{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.stamp.big{font-size:15px;padding:10px 16px;border-width:3px}
+.comp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
+.comp{background:var(--card);border-radius:18px;border:1.5px solid var(--dash);overflow:hidden;display:flex;flex-direction:column}
+.comp .pic{background:#05061A;display:grid;place-items:center;padding:18px;min-height:190px}
+.comp .pic img{max-height:240px;width:auto;border-radius:10px}
+.comp .txt{padding:14px 16px}
+.comp h3{font:800 17px var(--disp)}
+.comp p{font-size:14.5px;color:#3B362E;margin-top:4px}
+.comp.wide{grid-column:span 2}
+
+/* c) guidelines */
+.rules{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:40px}
+.rules-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;border-bottom:3px double var(--ink);padding-bottom:16px}
+.rules ol{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 32px;margin-top:26px;counter-reset:r}
+.rules li{counter-increment:r;position:relative;padding-top:34px}
+.rules li::before{content:counter(r,decimal-leading-zero);position:absolute;top:0;left:0;font:900 22px var(--disp);color:var(--blue-t)}
+.rules h3{font:800 18px/1.2 var(--disp)}
+.rules p{font-size:15px;margin-top:6px;color:#3B362E}
+
+/* d) prototype */
+.proto{display:grid;grid-template-columns:1fr auto;gap:56px;align-items:start}
+.tk-head{display:inline-block;background:var(--card);color:var(--ink);border-radius:18px;padding:18px 30px;
+  -webkit-mask:radial-gradient(circle 12px at 0 50%,#0000 11.5px,#000 12px) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 11.5px,#000 12px) right/51% 100% no-repeat;
+  mask:radial-gradient(circle 12px at 0 50%,#0000 11.5px,#000 12px) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 11.5px,#000 12px) right/51% 100% no-repeat}
+.tk-head h2{font:900 clamp(2rem,4vw,3.4rem)/1 var(--disp);font-stretch:90%;letter-spacing:-.02em}
+.journeys{list-style:none;display:grid;gap:10px;margin-top:28px;max-width:560px}
+.jr{width:100%;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding:16px 18px;border-radius:16px;border:1.5px solid var(--dash-i);background:transparent;color:var(--paper);font:inherit;cursor:pointer;text-decoration:none}
+.jr:hover,.jr[aria-current="true"]{background:rgba(242,236,223,.07);border-color:var(--blue-i)}
+.jr .num{font:900 22px var(--disp);color:var(--blue-i)}
+.jr b{display:block;font:800 18px var(--disp)}
+.jr span.steps{display:block;font-size:14.5px;color:var(--mut-i);margin-top:2px}
+.device{width:360px;height:740px;border-radius:52px;padding:12px;background:linear-gradient(145deg,#2b2620,#0d0c0b);box-shadow:0 40px 70px -20px rgba(0,0,0,.8),inset 0 0 0 1.5px rgba(255,255,255,.12);position:sticky;top:96px}
+.device .screen{width:100%;height:100%;border-radius:41px;overflow:hidden;background:#05061A;position:relative}
+.device iframe,.device .still{width:100%;height:100%;border:0;display:block;object-fit:cover;object-position:top}
+.device .load{position:absolute;left:16px;right:16px;bottom:22px;display:flex;justify-content:center}
+.proto-note{font-size:14px;color:var(--mut-i);margin-top:16px;max-width:560px}
+
+/* e) ideas */
+.ideas{list-style:none;display:grid;margin-top:40px}
+.idea{display:grid;grid-template-columns:70px 1fr auto;gap:20px;padding:22px 0;border-top:2px dashed var(--dash);align-items:start}
+.idea .n{font:900 34px/1 var(--disp);color:var(--blue-t)}
+.idea h3{font:800 21px/1.2 var(--disp)}
+.idea p{margin-top:6px;color:#3B362E;max-width:42em}
+.idea .meta{font:700 12.5px var(--disp);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);text-align:right;white-space:nowrap;line-height:1.9}
+
+footer{padding:80px 0 60px}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end}
+.foot h2{font:900 clamp(2.4rem,6vw,5rem)/.9 var(--disp);font-stretch:88%;text-transform:uppercase;letter-spacing:-.03em}
+.foot p{max-width:36em;margin-top:14px}
+.credits{margin-top:40px;padding-top:18px;border-top:2px dashed var(--dash-i);font-size:14px;color:var(--mut-i)}
+
+/* reveal: the hidden state exists only when JS runs, motion is allowed, and the element starts below the fold */
+html.js.motion [data-reveal]:not(.in){opacity:0;transform:translateY(24px)}
+[data-reveal]{transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+
+/* tablets and phones */
+@media (max-width:1100px){
+  .nav ul{display:none}.nav .btn{margin-left:auto}
+  .hero{grid-template-columns:1fr;max-height:none;min-height:0;padding-top:30px}
+  .ticket-stage{margin-top:10px}
+  .comp-grid{grid-template-columns:repeat(2,1fr)}
+  .cross{grid-template-columns:repeat(2,1fr)}
+  .chips{grid-template-columns:repeat(2,1fr)}
+  .rules ol{grid-template-columns:repeat(2,1fr)}
+  .proto{grid-template-columns:1fr}
+  .device{position:relative;top:0;margin:0 auto;width:300px;height:620px;border-radius:44px;padding:10px}
+  .device .screen{border-radius:35px}
 }
-.journey-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:420px}
-.journey-pills button{font:700 13px 'Plus Jakarta Sans';padding:8px 14px;min-height:40px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;transition:all .2s}
-.journey-pills button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
-.sticky-note{position:absolute;right:-48px;top:6%;background:#FFE7A8;color:#5B3B00;padding:10px 14px;border-radius:6px;font:700 14px/1.3 'Plus Jakarta Sans';transform:rotate(4deg);box-shadow:0 10px 20px -10px rgba(0,0,0,.3);max-width:150px;z-index:5}
-@media (max-width:1100px){.sticky-note{display:none}}
-.cycle .shot{opacity:0}
-.cycle .shot:first-child{opacity:1}
-@media (prefers-reduced-motion:no-preference){
-  .cycle .shot{animation:cycle calc(var(--n)*2.8s) var(--ease) infinite both;animation-delay:calc(var(--i)*2.8s)}
+@media (max-width:720px){
+  body{font-size:16px}
+  section{padding:72px 0}
+  h1{font-size:clamp(2.6rem,12.5vw,3.6rem)}
+  .brand{font-size:15px}
+  .nav .btn{padding:0 14px}
+  .tbody{--cut:236px}.tbody>img{height:208px}
+  .ba-row{grid-template-columns:1fr 1fr;gap:14px}
+  .ba-row .txt{grid-column:1/-1}
+  .ba figure img{width:100%}
+  .audit-head{grid-template-columns:1fr}
+  .shots{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:8px;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gut));padding-left:var(--gut);padding-right:var(--gut)}
+  .shots>div{flex:0 0 74%;scroll-snap-align:start}
+  .issues{grid-template-columns:1fr}
+  .types{grid-template-columns:1fr}
+  .comp-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gut));padding:0 var(--gut) 8px}
+  .comp{flex:0 0 78%;scroll-snap-align:start}
+  .rules{padding:24px}
+  .rules ol{grid-template-columns:1fr}
+  .idea{grid-template-columns:48px 1fr}
+  .idea .meta{grid-column:2;text-align:left}
 }
-@keyframes cycle{0%{opacity:0;transform:translateY(6%) scale(1.03)}5%,26%{opacity:1;transform:none}31%,100%{opacity:0;transform:translateY(-4%) scale(.98)}}
-
-/* Before / after */
-.ba-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,32px);margin-top:56px}
-.ba{display:flex;flex-direction:column;gap:16px}
-.compare{position:relative;aspect-ratio:390/844;border-radius:28px;overflow:hidden;background:#000;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);--pos:50%;touch-action:pan-y;user-select:none}
-.compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
-.compare .after{clip-path:inset(0 0 0 var(--pos))}
-.compare .bar{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;pointer-events:none}
-.compare .knob{position:absolute;top:50%;left:var(--pos);width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--orange-strong);color:#fff;display:grid;place-items:center;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.35);pointer-events:none}
-.compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
-.compare .tag{position:absolute;top:14px;padding:4px 10px;border-radius:999px;font:800 12px 'Plus Jakarta Sans';letter-spacing:.04em;text-transform:uppercase}
-.compare .tag.b{left:14px;background:rgba(0,0,0,.65);color:#fff}
-.compare .tag.a{right:14px;background:var(--orange-strong);color:#fff}
-.ba h3{display:flex;align-items:baseline;gap:10px}
-.ba h3 small{font:500 13px 'JetBrains Mono';color:var(--on-ink-muted)}
-.ba ul{list-style:none;display:grid;gap:8px}
-.ba li{padding-left:24px;position:relative;color:var(--on-ink);font-size:15.5px;line-height:1.5}
-.ba li::before{content:'';position:absolute;left:4px;top:.55em;width:10px;height:10px;border-radius:3px;background:var(--orange);transform:rotate(45deg)}
-@media (max-width:900px){.ba-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}}
-
-/* Audit */
-.audit{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,32px);margin-top:56px}
-.shotpin{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#fff}
-.shotpin img{width:100%}
-.shotpin .p{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:var(--orange-strong);color:#fff;font:800 13px/30px 'Plus Jakarta Sans';text-align:center;box-shadow:0 0 0 4px rgba(255,255,255,.9),0 6px 14px rgba(0,0,0,.3)}
-@media (prefers-reduced-motion:no-preference){.shotpin .p{animation:pulse 2.4s var(--ease) infinite}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,255,255,.9),0 0 0 4px rgba(207,74,12,.0)}50%{box-shadow:0 0 0 4px rgba(255,255,255,.9),0 0 0 12px rgba(207,74,12,.25)}}
-.issues{list-style:none;margin-top:18px;display:grid;gap:10px;counter-reset:i}
-.issues li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;font-size:15px;line-height:1.5}
-.issues li b.n{width:26px;height:26px;border-radius:50%;background:var(--orange-tint);color:var(--orange-deep);font:800 12px/26px 'Plus Jakarta Sans';text-align:center}
-.issues li span.fix{display:block;color:var(--success);font-weight:700;font-size:14px}
-.sev{display:inline-block;font:700 11px 'JetBrains Mono';padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:1px}
-.sev.h{background:#FDECEC;color:#B91C1C}.sev.m{background:var(--orange-tint);color:var(--orange-deep)}.sev.l{background:var(--sunk);color:var(--muted)}
-@media (max-width:900px){.audit{grid-template-columns:1fr;max-width:480px;margin-left:auto;margin-right:auto}}
-.global{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px}
-.card h3{font-size:18px;margin-bottom:6px}
-.card p{font-size:15px;color:var(--ink-soft);line-height:1.55}
-
-/* Personas */
-.personas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
-.persona{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px;display:flex;flex-direction:column;gap:10px}
-.persona .av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px}
-.persona .tagline{font-weight:700;color:var(--ink)}
-.persona dl{display:grid;gap:8px;font-size:15px}
-.persona dt{font:600 12px 'JetBrains Mono';color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.persona dd{color:var(--ink-soft);line-height:1.5}
-.assume{display:inline-block;margin-top:22px;font:600 13px 'JetBrains Mono';color:var(--orange-deep);background:var(--orange-tint);padding:6px 12px;border-radius:999px}
-@media (max-width:900px){.personas{grid-template-columns:1fr}}
-
-/* Journeys */
-.journeys{display:grid;grid-template-columns:1fr 400px;gap:clamp(24px,5vw,64px);margin-top:48px;align-items:start}
-.jlist{display:grid;gap:14px}
-.j{border-radius:24px;padding:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:background .25s,border-color .25s;text-align:left;color:inherit;font:inherit;width:100%}
-.j:hover{background:rgba(255,255,255,.08)}
-.j[aria-pressed=true]{background:rgba(255,107,0,.12);border-color:#FF9A55}
-.j h3{display:flex;gap:12px;align-items:baseline}
-.j h3 i{font:800 13px 'JetBrains Mono';color:#FF9A55;font-style:normal}
-.j ol{margin:14px 0 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.j ol li{font-size:13.5px;font-weight:700;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--on-ink)}
-.j ol li+li::before{content:'→ ';color:#FF9A55}
-.j p{margin-top:12px;font-size:15px;color:var(--on-ink-muted);line-height:1.5}
-.j p b{color:#fff}
-.journeys .stage{position:sticky;top:90px}
-@media (max-width:980px){.journeys{grid-template-columns:1fr}.journeys .stage{position:relative;top:0}}
-
-/* Signature */
-.sig{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(24px,5vw,72px);align-items:center}
-.sig-shots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.sig-shots img{border-radius:26px;border:1px solid var(--line);box-shadow:0 30px 60px -36px rgba(11,31,77,.45)}
-.sig-shots img:nth-child(2){margin-top:48px}
-.facts{display:grid;gap:12px;margin-top:26px}
-.facts div{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:16px;color:var(--ink-soft)}
-.facts svg{color:var(--orange-text)}
-@media (max-width:900px){.sig{grid-template-columns:1fr}}
-
-/* System */
-.sys-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:48px}
-.sw{grid-column:span 3;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#fff}
-.sw .chip{height:110px;display:flex;align-items:flex-end;padding:14px;font:800 15px 'Plus Jakarta Sans'}
-.sw .meta{padding:14px;display:grid;gap:4px;font-size:14px}
-.sw .meta b{font-size:15px}
-.sw .meta .mono{color:var(--muted)}
-.ratio{display:inline-flex;gap:6px;align-items:center;font:700 12px 'JetBrains Mono';color:var(--success)}
-.ratio.bad{color:#B91C1C}
-@media (max-width:1000px){.sw{grid-column:span 6}}
-@media (max-width:520px){.sw{grid-column:span 12}}
-.rule{margin-top:20px;display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:18px;background:var(--orange-tint);color:var(--orange-deep);font-weight:600;font-size:15.5px}
-.type-spec{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.spec{background:#fff;border:1px solid var(--line);border-radius:26px;padding:28px}
-.spec .big{font-size:clamp(56px,8vw,104px);font-weight:800;letter-spacing:-.04em;line-height:1}
-.scale{display:grid;gap:12px;margin-top:20px}
-.scale div{display:grid;grid-template-columns:110px 1fr;align-items:baseline;gap:12px;border-top:1px solid var(--line);padding-top:12px}
-.scale .mono{color:var(--muted);font-size:12px}
-@media (max-width:900px){.type-spec{grid-template-columns:1fr}}
-.tokens{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
-.tok{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px}
-.tok h3{font-size:17px;margin-bottom:12px}
-.bars{display:grid;gap:8px}
-.bars div{display:flex;align-items:center;gap:10px;font:500 13px 'JetBrains Mono';color:var(--muted)}
-.bars i{display:block;height:14px;border-radius:4px;background:var(--orange)}
-.radii{display:flex;gap:10px;flex-wrap:wrap}
-.radii div{width:54px;height:54px;background:var(--orange-tint);border:2px solid var(--orange-text);display:grid;place-items:center;font:600 11px 'JetBrains Mono';color:var(--orange-deep)}
-.motion-demo{display:flex;gap:10px;flex-wrap:wrap}
-.motion-demo button{font:700 14px 'Plus Jakarta Sans';border:0;border-radius:999px;padding:10px 16px;min-height:44px;background:var(--orange-strong);color:#fff;cursor:pointer}
-.motion-demo button:nth-child(2){background:var(--navy)}
-.motion-demo button:nth-child(3){background:var(--ink)}
-
-/* Components */
-.comp-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:48px}
-.comp{grid-column:span 4;background:#fff;border:1px solid var(--line);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
-.comp.w6{grid-column:span 6}.comp.w8{grid-column:span 8}.comp.w12{grid-column:span 12}
-.comp figure{background:var(--paper);padding:22px;display:grid;place-items:center;border-bottom:1px solid var(--line);min-height:160px}
-.comp figure img{max-height:360px;width:auto;border-radius:12px}
-.comp .body{padding:20px 22px 22px;display:grid;gap:8px}
-.comp .body h3{font-size:18px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.comp .body h3 code{font:500 12px 'JetBrains Mono';color:var(--muted)}
-.comp .body p{font-size:14.5px;color:var(--ink-soft);line-height:1.5}
-.dd{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-.dd div{font-size:13.5px;line-height:1.45;padding:10px 12px;border-radius:12px}
-.dd .do{background:var(--success-tint);color:#14532D}
-.dd .dont{background:#FDECEC;color:#7F1D1D}
-.dd b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-@media (max-width:1000px){.comp,.comp.w6,.comp.w8{grid-column:span 6}}
-@media (max-width:640px){.comp,.comp.w6,.comp.w8,.comp.w12{grid-column:span 12}}
-
-/* Guidelines */
-.guides{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
-.guide{border-radius:24px;padding:26px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
-.guide h3{margin-bottom:12px}
-.guide ul{list-style:none;display:grid;gap:10px}
-.guide li{font-size:15px;color:var(--on-ink);line-height:1.5;padding-left:20px;position:relative}
-.guide li::before{content:'';position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:#FF9A55}
-.guide code{font:500 13px 'JetBrains Mono';background:rgba(255,255,255,.1);padding:1px 6px;border-radius:6px}
-@media (max-width:900px){.guides{grid-template-columns:1fr}}
-
-/* Languages */
-.lang{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px;max-width:860px}
-.lang figure{display:grid;gap:10px}
-.lang img{border-radius:26px;border:1px solid var(--line);box-shadow:0 30px 60px -36px rgba(11,31,77,.45)}
-.lang figcaption{font-size:14px;color:var(--muted);font-weight:600;text-align:center}
-
-/* Suggestions */
-.sugg{display:grid;gap:12px;margin-top:48px}
-.sg{display:grid;grid-template-columns:56px 1fr 170px;gap:18px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px}
-.sg .num{font:800 28px 'Plus Jakarta Sans';color:var(--orange-text);letter-spacing:-.03em}
-.sg h3{font-size:18px}
-.sg p{font-size:15px;color:var(--ink-soft);margin-top:4px;line-height:1.55}
-.sg .ie{display:grid;gap:6px;font:600 12px 'JetBrains Mono';color:var(--muted)}
-.sg .ie span{display:flex;justify-content:space-between;gap:8px}
-.dots{letter-spacing:2px;color:var(--orange-text)}
-.sg .where{display:inline-block;margin-top:8px;font:600 12px 'JetBrains Mono';color:var(--navy);background:var(--navy-tint);padding:3px 10px;border-radius:999px}
-@media (max-width:700px){.sg{grid-template-columns:40px 1fr}.sg .ie{grid-column:2}}
-
-/* Measure */
-.measure{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
-table{width:100%;border-collapse:collapse;font-size:15px}
-th,td{text-align:left;padding:12px 10px;border-top:1px solid var(--line);vertical-align:top}
-th{font:600 12px 'JetBrains Mono';color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-@media (max-width:900px){.measure{grid-template-columns:1fr}}
-
-/* Build */
-.build{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,64px);margin-top:40px}
-.files{font:500 14px/1.9 'JetBrains Mono';color:var(--on-ink);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px;overflow-x:auto;white-space:pre}
-.files b{color:#FF9A55;font-weight:500}
-.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.stack span{padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);font-weight:700;font-size:14px}
-.qr{display:flex;gap:18px;align-items:center;margin-top:28px;padding:18px;border-radius:22px;background:#fff;color:var(--ink)}
-.qr #qrcode{width:116px;height:116px;flex:none}
-.qr #qrcode img,.qr #qrcode canvas{width:116px!important;height:116px!important}
-@media (max-width:900px){.build{grid-template-columns:1fr}}
-
-footer{padding:56px 0 72px;background:var(--ink);color:var(--on-ink);border-top:1px solid rgba(255,255,255,.1)}
-footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
-footer a{font-weight:700;color:#fff}
-footer small{color:var(--on-ink-muted);display:block;margin-top:6px;font-size:13px;max-width:60ch}
-
-/* Reveal: hidden only when JS adds .js and motion is allowed, with a failsafe */
-@media (prefers-reduced-motion:no-preference){
-  .js .rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform 1s var(--ease)}
-  .js .rv.in{opacity:1;transform:none}
-}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:420px){.cross{grid-template-columns:1fr}.chip .sw{height:64px}.chip .cr{float:none;display:inline-block;margin-top:6px}.lineitem .leader{display:none}}
 </style>
-<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
-<a class="sr" href="#main">Skip to content</a>
-<nav class="nav" aria-label="Sections">
-  <div class="wrap">
-    <a class="brand" href="#top"><img src="img/mark.png" alt="" width="96" height="96">Locall <small>redesign by Aayush Thakur</small></a>
-    <ul>
-      <li><a href="#before-after">Before / after</a></li>
+<a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><img src="img/mark.png" alt="" width="26" height="26">Locall, redesigned</a>
+    <nav aria-label="Sections"><ul>
+      <li><a href="#screens">Screens</a></li>
       <li><a href="#audit">Audit</a></li>
-      <li><a href="#journeys">Journeys</a></li>
-      <li><a href="#system">Design system</a></li>
+      <li><a href="#colour">Colour &amp; type</a></li>
       <li><a href="#components">Components</a></li>
-      <li><a href="#suggestions">Suggestions</a></li>
-    </ul>
-    <a class="btn" href="../" target="_blank" rel="noopener">Open the app</a>
+      <li><a href="#guidelines">Guidelines</a></li>
+      <li><a href="#prototype">Prototype</a></li>
+      <li><a href="#ideas">Ideas</a></li>
+    </ul></nav>
+    <a class="btn dark" href="/" target="_blank" rel="noopener">Open prototype ↗</a>
   </div>
-</nav>
+</header>
 
 <main id="main">
-<!-- HERO -->
-<section class="hero" id="top">
-  <div class="wrap">
-    <div class="rv">
-      <span class="eyebrow"><b>Assignment</b> Home · History · Profile</span>
-      <h1>Best deals <em>near you</em>, on the first screen.</h1>
-      <p class="lead">I redesigned Locall's three screens so a first-time smartphone user in Durg can find a deal from a shop down the road, save it, and come back to it. It's a working Expo app, not a mock-up: tap through it on the right, or open it on your phone.</p>
-      <div class="proof">
-        <div><strong>3 + 3</strong><span>screens: the 3 asked, plus deal, shop, search</span></div>
-        <div><strong>5</strong><span>journeys you can play</span></div>
-        <div><strong>2</strong><span>languages, switched live: English, <span class="hi">हिन्दी</span></span></div>
-        <div><strong>4.5:1+</strong><span>contrast on every text colour</span></div>
-      </div>
-      <div class="cta-row">
-        <a class="btn" href="#journeys">Play the journeys</a>
-        <a class="btn ghost" href="#before-after">See before / after</a>
+<section class="wrap hero" id="top">
+  <div>
+    <span class="stamp">Case study · Aayush Thakur · Nov 2026</span>
+    <h1>Find it. Save it. Use it <em>at the counter.</em></h1>
+    <p class="lead">Locall shows offers from shops near you in Durg and Bhilai. For this assignment I redesigned its Home, History and Profile, then built them as a working Expo app you can play with.</p>
+    <div class="cta">
+      <a class="btn dark" href="/" target="_blank" rel="noopener">Try the prototype ↗</a>
+      <a class="btn line" href="https://github.com/aayush-t-exe/locall-redesign" target="_blank" rel="noopener">Code on GitHub</a>
+    </div>
+    <ul class="receipt" aria-label="What the assignment asked for">
+      <li><a href="#screens"><b>a</b><span class="what">Redesigned screens</span><i></i><span class="val">Home · History · Profile</span></a></li>
+      <li><a href="#colour"><b>b</b><span class="what">Colour palette &amp; type</span><i></i><span class="val">Locall Night</span></a></li>
+      <li><a href="#components"><b>c</b><span class="what">Components &amp; guidelines</span><i></i><span class="val">12 parts · 9 rules</span></a></li>
+      <li><a href="#prototype"><b>d</b><span class="what">Interactive prototype</span><i></i><span class="val">5 journeys</span></a></li>
+      <li><a href="#ideas"><b>e</b><span class="what">UX suggestions</span><i></i><span class="val">17 issues · 10 ideas</span></a></li>
+    </ul>
+    <p class="try">Try it in 60 seconds: <span>Within 3 km → Food → a deal → Save → History</span></p>
+  </div>
+
+  <div class="ticket-stage">
+    <p class="hand" aria-hidden="true">slide it, like in the app ↓</p>
+    <div class="ticket" id="ticket">
+      <div class="tbody">
+        <img src="img/momos.webp" alt="A plate of steamed momos with red chutney" width="712" height="760" fetchpriority="high">
+        <span class="off">31% OFF</span>
+        <div class="tline"></div>
+        <h2>Chicken Steamed Momos</h2>
+        <p>Momo Land · 400 m · ₹69 instead of ₹100</p>
+        <div class="code">ML·69TY <small>show at counter</small></div>
+        <div class="slide" id="slide">
+          <span class="lbl" aria-hidden="true">Slide to use at counter</span>
+          <button class="knob" id="knob" type="button" aria-label="Use the deal at the counter">›</button>
+        </div>
+        <div class="used-stamp" aria-hidden="true">Used<small>₹31 saved</small></div>
       </div>
     </div>
-    <div class="stage rv" id="heroStage">
-      <div class="tilt">
-        <div class="phone">
-          <div class="phone-island"></div>
-          <div class="phone-screen"><div class="vp" id="heroScreen">
-            <div class="cycle" style="--n:4">
-              <img class="shot" style="--i:0" src="img/after-home.jpg" alt="Redesigned Locall Home screen" width="600" height="1298">
-              <img class="shot" style="--i:1" src="img/after-radius.jpg" alt="" width="600" height="1298" loading="lazy">
-              <img class="shot" style="--i:2" src="img/after-history.jpg" alt="" width="600" height="1298" loading="lazy">
-              <img class="shot" style="--i:3" src="img/after-profile.jpg" alt="" width="600" height="1298" loading="lazy">
-            </div>
-          </div></div>
-        </div>
-      </div>
-      <span class="sticky-note">it's live. scroll it, tap it, save a deal</span>
+    <p class="note" id="ticketStatus" role="status">Shops, prices and people are sample data.</p>
+    <button class="again" id="again" type="button" hidden>Slide it again</button>
+  </div>
+</section>
+
+<!-- a) screens -->
+<section class="wrap" id="screens" aria-labelledby="screens-h">
+  <div class="lineitem" data-reveal>
+    <span class="ltr" aria-hidden="true">a)</span>
+    <h2 class="big" id="screens-h">Three screens, before <span class="lux">and after</span></h2>
+    <span class="leader" aria-hidden="true"></span><span class="qty">3 screens</span>
+  </div>
+  <p class="sec-lead mut">On the left is Locall today, from its own screenshots. On the right is the redesign, in a look I call Locall Night: a deep navy night, one glowing object per screen, and gold for money.</p>
+  <div class="ba">
+    <div class="ba-row" data-reveal>
+      <figure class="before"><figcaption>Now</figcaption><img src="img/before-home.webp" alt="Locall's current Home screen" width="600" height="1300" loading="lazy"></figure>
+      <figure class="after"><figcaption>Redesign</figcaption><img src="img/after-home.webp" alt="The redesigned Home screen with the Tonight's steal ticket" width="600" height="1298" loading="lazy"></figure>
+      <div class="txt"><h3>Home</h3><ul>
+        <li>A deal is on screen one. "Tonight's steal" shows the best offer nearby with its shop, price, MRP, distance and end time.</li>
+        <li>Six km chips became one "Within 3 km" chip that opens a radius map.</li>
+        <li>Eight labelled shortcuts replace the text-only tabs, and nothing floats over the deals.</li>
+      </ul></div>
+    </div>
+    <div class="ba-row" data-reveal>
+      <figure class="before"><figcaption>Now</figcaption><img src="img/before-history.webp" alt="Locall's current History screen" width="600" height="1300" loading="lazy"></figure>
+      <figure class="after"><figcaption>Redesign</figcaption><img src="img/after-history.webp" alt="The redesigned History screen with saved deals as tickets" width="600" height="1298" loading="lazy"></figure>
+      <div class="txt"><h3>History</h3><ul>
+        <li>The brief asked for past searches and bookmarks, so History has Saved, Searches and Viewed.</li>
+        <li>Saved deals are grouped into ending soon, still on and ended, with what you can still save at the top.</li>
+        <li>Searches re-run in one tap. Removing anything shows Undo instead of a dialog.</li>
+      </ul></div>
+    </div>
+    <div class="ba-row" data-reveal>
+      <figure class="before"><figcaption>Now</figcaption><img src="img/before-profile.webp" alt="Locall's current Profile screen, with personal details blurred" width="600" height="1300" loading="lazy"></figure>
+      <figure class="after"><figcaption>Redesign</figcaption><img src="img/after-profile.webp" alt="The redesigned Profile screen with the gold savings coin" width="600" height="1298" loading="lazy"></figure>
+      <div class="txt"><h3>Profile</h3><ul>
+        <li>"You saved ₹" is the hero, counted from completed orders only, with a goal and medals.</li>
+        <li>A real name with initials instead of an email handle, and no coordinates anywhere.</li>
+        <li>English and हिन्दी switch live, along with orders, followed shops and reviews.</li>
+      </ul></div>
     </div>
   </div>
 </section>
 
-<!-- BEFORE / AFTER -->
-<section class="ink curve-top" id="before-after">
+<!-- audit -->
+<section class="ink" id="audit" aria-labelledby="audit-h">
   <div class="wrap">
-    <span class="hand rv">drag the orange knob</span>
-    <h2 class="rv">Same app. Same three screens. <em>Less hunting.</em></h2>
-    <p class="lead rv" style="margin-top:18px">Left of the line is the current app (Locall's own screenshots). Right of it is the redesign.</p>
-    <div class="ba-grid">
-      <article class="ba rv">
-        <div class="compare" data-compare>
-          <img src="img/before-home.jpg" alt="Current Locall Home screen" width="600" height="1300" loading="lazy">
-          <img class="after" src="img/after-home.jpg" alt="Redesigned Home screen" width="600" height="1298" loading="lazy">
-          <span class="tag b">Before</span><span class="tag a">After</span>
-          <span class="bar"></span><span class="knob" aria-hidden="true">⇆</span>
-          <input type="range" min="0" max="100" value="50" aria-label="Compare Home before and after">
-        </div>
-        <h3>Home <small>offers &amp; deals</small></h3>
-        <ul>
-          <li>Six km chips became one "Within 3 km" chip that opens the radius map.</li>
-          <li>Every card shows the item, shop, rating, distance, walk time and end time. Nothing floats over it.</li>
-          <li>Categories have icons and labels, and "Subscribed" became <b>Follow</b> with a rail of your shops.</li>
+    <div class="audit-head" data-reveal>
+      <span class="huge" aria-hidden="true">17</span>
+      <div>
+        <h2 class="big" id="audit-h">Things that got in the way</h2>
+        <p class="sec-lead">Numbered on Locall's current screens. I ranked them by how much each one blocks the main job: find a deal nearby and act on it. Here are the six biggest.</p>
+      </div>
+    </div>
+    <div class="shots" data-reveal>
+      <div><div class="shot"><img src="img/before-home.webp" alt="Locall Home with issues 1 to 6 marked" width="600" height="1300" loading="lazy">
+        <span class="pin" style="left:62%;top:6.6%">1</span><span class="pin" style="left:58%;top:11.7%">6</span><span class="pin" style="left:50%;top:27.5%">2</span><span class="pin" style="left:12%;top:61.5%">3</span><span class="pin" style="left:34%;top:69%">4</span><span class="pin" style="left:87%;top:84%">5</span></div><p class="shot-cap">Home</p></div>
+      <div><div class="shot"><img src="img/before-history.webp" alt="Locall History with issues 7 to 11 marked" width="600" height="1300" loading="lazy">
+        <span class="pin" style="left:68%;top:11.7%">7</span><span class="pin" style="left:45%;top:30.7%">11</span><span class="pin" style="left:87%;top:34%">8</span><span class="pin" style="left:33%;top:60%">9</span><span class="pin" style="left:50%;top:76%">10</span></div><p class="shot-cap">History</p></div>
+      <div><div class="shot"><img src="img/before-profile.webp" alt="Locall Profile with issues 12 to 17 marked" width="600" height="1300" loading="lazy">
+        <span class="pin" style="left:46%;top:7.8%">12</span><span class="pin" style="left:50%;top:21%">13</span><span class="pin" style="left:50%;top:41.5%">17</span><span class="pin" style="left:10%;top:52%">14</span><span class="pin" style="left:84%;top:74%">15</span><span class="pin" style="left:50%;top:91%">16</span></div><p class="shot-cap">Profile</p></div>
+    </div>
+
+    <ol class="issues" aria-label="The six biggest issues">
+      <li class="issue"><span class="n">2</span><div><p>Five rows of controls sit above the first deal. The six km chips take a whole row.</p><span class="fix">→ One radius chip, and a deal on screen one.</span></div></li>
+      <li class="issue"><span class="n">3</span><div><p>"Popular" cards show only "32%" and "Rs. 89". No item, shop or distance.</p><span class="fix">→ Every deal card shows item, shop, price, MRP, distance and end time.</span></div></li>
+      <li class="issue"><span class="n">5</span><div><p>The chat button and the floating nav cover the shop name, rating and distance.</p><span class="fix">→ Chat moved to WhatsApp on the deal page. Screens leave room for the dock.</span></div></li>
+      <li class="issue"><span class="n">7</span><div><p>History has no past searches, which the brief asks for. "Ending soon" is a filter shown as a tab.</p><span class="fix">→ Saved · Searches · Viewed.</span></div></li>
+      <li class="issue"><span class="n">13</span><div><p>Profile stats read 0 · 0 · ₹0 with no meaning and no next step.</p><span class="fix">→ "You saved ₹" as the hero. New users get a first-saving prompt.</span></div></li>
+      <li class="issue"><span class="n">15</span><div><p>Raw latitude and longitude are shown to the user.</p><span class="fix">→ Area names only. Coordinates stay inside the app.</span></div></li>
+    </ol>
+
+    <details>
+      <summary>Show all 17</summary>
+      <ol class="issues" aria-label="The other 11 issues">
+        <li class="issue"><span class="n">1</span><div><p>The location is a long grey sentence squeezed next to the logo.</p><span class="fix">→ The area name as the screen title. Tap to change it.</span></div></li>
+        <li class="issue"><span class="n">4</span><div><p>Category tabs are text only, and "Cloths" is misspelt.</p><span class="fix">→ Shortcut tiles with icons and labels, and "Clothes".</span></div></li>
+        <li class="issue"><span class="n">6</span><div><p>"All / Subscribed" doesn't say what subscribing does.</p><span class="fix">→ "Follow", with "Get their new deals first".</span></div></li>
+        <li class="issue"><span class="n">8</span><div><p>Cart buttons are icon-only and far from the price.</p><span class="fix">→ A labelled button next to the price.</span></div></li>
+        <li class="issue"><span class="n">9</span><div><p>A kirana listing shows an iPhone at ₹150 (MRP ₹2,000). It looks like test data, and a price like that makes people doubt the real ones.</p><span class="fix">→ Realistic sample data, and listing checks in idea 02.</span></div></li>
+        <li class="issue"><span class="n">10</span><div><p>No empty states, no distance, no end time and no "deal ended" state.</p><span class="fix">→ Every list has an empty state with one button. Ended deals say so.</span></div></li>
+        <li class="issue"><span class="n">11</span><div><p>"Rs." on one screen, "₹" on another.</p><span class="fix">→ "₹" everywhere, with Indian digit grouping.</span></div></li>
+        <li class="issue"><span class="n">12</span><div><p>The name row shows an email handle instead of a name. (Blurred here.)</p><span class="fix">→ Name, initials and a verified tick.</span></div></li>
+        <li class="issue"><span class="n">14</span><div><p>Dark slabs alternate with white sections, so it reads like two apps.</p><span class="fix">→ One surface system.</span></div></li>
+        <li class="issue"><span class="n">16</span><div><p>Reviews are cut off under the floating nav.</p><span class="fix">→ Bottom padding sized to the dock on every tab.</span></div></li>
+        <li class="issue"><span class="n">17</span><div><p>"No orders yet" has nothing to do next, and "EMAIL ID" uses a different label style.</p><span class="fix">→ An empty state with "Browse deals".</span></div></li>
+      </ol>
+    </details>
+
+    <div class="cross" data-reveal>
+      <div><h3>The brand orange fails as text</h3><p>#FF6B00 on white is 2.9:1. In the redesign orange is a light fill only, and every text colour passes 4.5:1.</p></div>
+      <div><h3>No Hindi</h3><p>Locall is starting in Durg and Bhilai. The redesign switches English and हिन्दी live, with taller lines for matras.</p></div>
+      <div><h3>Small touch targets</h3><p>The cart and chat icons are small. In the redesign every target is at least 44 px on web, and main buttons are 48 to 60.</p></div>
+      <div><h3>Honest end times</h3><p>A countdown appears only in the last 6 hours. Otherwise it says "Ends Thu, 5 Nov". India's 2023 dark-pattern guidelines ban false urgency.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- b) colour & type -->
+<section class="ink" id="colour" aria-labelledby="colour-h" style="padding-top:24px">
+  <div class="wrap">
+    <h2 class="big" id="colour-h" data-reveal>b) Colour &amp; type, where <span class="lux" style="color:#F6CF72">gold is money</span></h2>
+    <p class="sec-lead" data-reveal>The navy from Locall's logo, darkened into a night background. Gold is only for prices and savings. Ember orange is a warm light for dots, glows and the % badge. Ratios are measured against the night background.</p>
+    <div class="chips" data-reveal>
+      <div class="chip"><div class="sw" style="background:#05061A;border-bottom:1px solid rgba(255,255,255,.08)"></div><div class="meta"><b>Night</b><code>#05061A</code> <span class="cr">background</span></div></div>
+      <div class="chip"><div class="sw" style="background:#F6CF72"></div><div class="meta"><b>Gold</b><code>#F6CF72</code> <span class="cr">13.4 : 1</span></div></div>
+      <div class="chip"><div class="sw" style="background:#FF7A1A"></div><div class="meta"><b>Ember</b><code>#FF7A1A</code> <span class="cr">fills only</span></div></div>
+      <div class="chip"><div class="sw" style="background:#FFB27A"></div><div class="meta"><b>Ember text</b><code>#FFB27A</code> <span class="cr">11.4 : 1</span></div></div>
+      <div class="chip"><div class="sw" style="background:#F6F3EC"></div><div class="meta"><b>Ink</b><code>#F6F3EC</code> <span class="cr">18.1 : 1</span></div></div>
+      <div class="chip"><div class="sw" style="background:#A3A3BE"></div><div class="meta"><b>Muted</b><code>#A3A3BE</code> <span class="cr">8.2 : 1</span></div></div>
+      <div class="chip"><div class="sw" style="background:#5B4BFF"></div><div class="meta"><b>Violet glow</b><code>#5B4BFF</code> <span class="cr">light only</span></div></div>
+      <div class="chip"><div class="sw" style="background:#5BE3A8"></div><div class="meta"><b>Open, verified</b><code>#5BE3A8</code> <span class="cr">12.4 : 1</span></div></div>
+    </div>
+    <div class="types" data-reveal>
+      <div class="spec">
+        <span class="tag">Plus Jakarta Sans · titles, prices, UI</span>
+        <div class="s1">₹2,340 saved</div>
+        <span class="tag" style="display:block;margin-top:18px">Instrument Serif italic · one accent phrase</span>
+        <div class="s2">your saved steals</div>
+        <span class="tag" style="display:block;margin-top:18px">Noto Sans Devanagari · हिन्दी</span>
+        <div class="s3" lang="hi">आज रात की बचत</div>
+        <p>Plus Jakarta Sans is the heading font on Locall's own website, so the app stays on brand.</p>
+      </div>
+      <div class="spec">
+        <span class="tag">Type scale (sp)</span>
+        <ul class="scale">
+          <li><span>Display</span><span>30 / 36 · 800</span></li>
+          <li><span>Title</span><span>22 / 28 · 800</span></li>
+          <li><span>Heading</span><span>18 / 24 · 700</span></li>
+          <li><span>Body</span><span>16 / 24 · 500</span></li>
+          <li><span>Label</span><span>14 / 20 · 600</span></li>
+          <li><span>Small, micro</span><span>13 and 12</span></li>
         </ul>
-      </article>
-      <article class="ba rv">
-        <div class="compare" data-compare>
-          <img src="img/before-history.jpg" alt="Current Locall History screen" width="600" height="1300" loading="lazy">
-          <img class="after" src="img/after-history.jpg" alt="Redesigned History screen" width="600" height="1298" loading="lazy">
-          <span class="tag b">Before</span><span class="tag a">After</span>
-          <span class="bar"></span><span class="knob" aria-hidden="true">⇆</span>
-          <input type="range" min="0" max="100" value="50" aria-label="Compare History before and after">
-        </div>
-        <h3>History <small>searches &amp; bookmarks</small></h3>
-        <ul>
-          <li>The brief says History holds past searches and bookmarks. The old screen had no searches at all. Now: Saved · Searches · Viewed.</li>
-          <li>Saved deals are grouped by what matters: ending soon, still on, ended.</li>
-          <li>Removing something shows Undo, never an "Are you sure?" dialog.</li>
-        </ul>
-      </article>
-      <article class="ba rv">
-        <div class="compare" data-compare>
-          <img src="img/before-profile.jpg" alt="Current Locall Profile screen" width="600" height="1300" loading="lazy">
-          <img class="after" src="img/after-profile.jpg" alt="Redesigned Profile screen" width="600" height="1298" loading="lazy">
-          <span class="tag b">Before</span><span class="tag a">After</span>
-          <span class="bar"></span><span class="knob" aria-hidden="true">⇆</span>
-          <input type="range" min="0" max="100" value="50" aria-label="Compare Profile before and after">
-        </div>
-        <h3>Profile <small>user info</small></h3>
-        <ul>
-          <li>"You saved ₹" is the hero, with the number of local shops it came from and the next milestone.</li>
-          <li>No latitude and longitude on screen. Ever.</li>
-          <li>Language, deal alerts, saved places and WhatsApp help live here.</li>
-        </ul>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- AUDIT -->
-<section id="audit">
-  <div class="wrap">
-    <span class="hand rv">what was getting in the way</span>
-    <h2 class="rv">17 problems, numbered on the <em>real screens.</em></h2>
-    <p class="lead rv" style="margin-top:18px">Severity is how much it blocks the core job: find a nearby deal and act on it. Every fix maps to something you can tap in the prototype.</p>
-    <div class="audit">
-      <div class="rv">
-        <div class="shotpin">
-          <img src="img/before-home.jpg" alt="Current Home screen with numbered issues" width="600" height="1300" loading="lazy">
-          <span class="p" style="left:62%;top:6.8%">1</span>
-          <span class="p" style="left:88%;top:25%">2</span>
-          <span class="p" style="left:20%;top:61%">3</span>
-          <span class="p" style="left:34%;top:69%">4</span>
-          <span class="p" style="left:88%;top:84.5%">5</span>
-          <span class="p" style="left:42%;top:11.7%">6</span>
-        </div>
-        <ol class="issues">
-          <li><b class="n">1</b><div>Location is a long grey sentence squeezed beside the logo.<span class="sev l">low</span><span class="fix">→ tappable area pill with a sheet</span></div></li>
-          <li><b class="n">2</b><div>Five rows of controls before the first deal; the six km chips alone take a full row.<span class="sev h">high</span><span class="fix">→ one radius chip, deals start on screen one</span></div></li>
-          <li><b class="n">3</b><div>"Popular" cards show only "32%" and "Rs. 89". No item, no shop, no distance.<span class="sev h">high</span><span class="fix">→ deal card with 6 facts, "31% OFF · Save ₹31"</span></div></li>
-          <li><b class="n">4</b><div>Text-only category tabs, and "Cloths" is misspelt.<span class="sev m">med</span><span class="fix">→ icon + label tiles, "Clothes"</span></div></li>
-          <li><b class="n">5</b><div>The chat button and floating nav cover the shop name, rating and distance.<span class="sev h">high</span><span class="fix">→ docked nav; chat moved to WhatsApp on the deal</span></div></li>
-          <li><b class="n">6</b><div>"All / Subscribed" tabs hide what subscribing does.<span class="sev m">med</span><span class="fix">→ "Follow · get their new deals first"</span></div></li>
-        </ol>
-      </div>
-      <div class="rv">
-        <div class="shotpin">
-          <img src="img/before-history.jpg" alt="Current History screen with numbered issues" width="600" height="1300" loading="lazy">
-          <span class="p" style="left:50%;top:11.8%">7</span>
-          <span class="p" style="left:87%;top:34%">8</span>
-          <span class="p" style="left:40%;top:57%">9</span>
-          <span class="p" style="left:50%;top:78%">10</span>
-          <span class="p" style="left:60%;top:30.5%">11</span>
-        </div>
-        <ol class="issues">
-          <li><b class="n">7</b><div>History should show past searches; there are none. "Ending soon" is a filter posing as a tab.<span class="sev h">high</span><span class="fix">→ Saved · Searches · Viewed</span></div></li>
-          <li><b class="n">8</b><div>Icon-only cart buttons, far from the price.<span class="sev m">med</span><span class="fix">→ labelled actions next to the price</span></div></li>
-          <li><b class="n">9</b><div>"iPhone: Rs 2,000 → Rs 150" from a kirana store. Demo data like this teaches users not to trust prices.<span class="sev m">med</span><span class="fix">→ realistic sample data + listing rules (suggestion 2)</span></div></li>
-          <li><b class="n">10</b><div>No empty state, no distance, no end time, no "deal ended" state.<span class="sev m">med</span><span class="fix">→ every list has an empty state with one button</span></div></li>
-          <li><b class="n">11</b><div>"Rs." here, "₹" on Profile.<span class="sev l">low</span><span class="fix">→ "₹" everywhere, Indian digit grouping</span></div></li>
-        </ol>
-      </div>
-      <div class="rv">
-        <div class="shotpin">
-          <img src="img/before-profile.jpg" alt="Current Profile screen with numbered issues, name hidden" width="600" height="1300" loading="lazy">
-          <span class="p" style="left:40%;top:11.5%">12</span>
-          <span class="p" style="left:50%;top:21%">13</span>
-          <span class="p" style="left:50%;top:40%">14</span>
-          <span class="p" style="left:50%;top:74%">15</span>
-          <span class="p" style="left:50%;top:88%">16</span>
-          <span class="p" style="left:14%;top:61.6%">17</span>
-        </div>
-        <ol class="issues">
-          <li><b class="n">12</b><div>The name row shows the email handle, not a name (name and email blurred here for privacy).<span class="sev l">low</span><span class="fix">→ real name, initials avatar, Verified</span></div></li>
-          <li><b class="n">13</b><div>Stats read 0 · 0 · ₹0 with no meaning or next step.<span class="sev m">med</span><span class="fix">→ "You saved ₹" hero; new users get a first-saving prompt</span></div></li>
-          <li><b class="n">14</b><div>Dark slabs alternate with white sections: it looks like two apps.<span class="sev m">med</span><span class="fix">→ one surface system on warm paper</span></div></li>
-          <li><b class="n">15</b><div>Raw "Latitude, Longitude 21.2, 81.3" shown to the user.<span class="sev h">high</span><span class="fix">→ saved places, never coordinates</span></div></li>
-          <li><b class="n">16</b><div>Reviews are cut off under the floating nav.<span class="sev m">med</span><span class="fix">→ docked nav + safe bottom padding</span></div></li>
-          <li><b class="n">17</b><div>"No orders yet" with nothing to do next; "EMAIL ID" in a different label style.<span class="sev l">low</span><span class="fix">→ empty state with "Browse deals near you"</span></div></li>
-        </ol>
-      </div>
-    </div>
-    <div class="global">
-      <div class="card rv"><h3>The brand orange fails as text</h3><p>#FF6B00 on white is 2.86:1. Small orange text and white-on-orange buttons fail WCAG AA. I kept it for fills and added two darker shades that pass.</p></div>
-      <div class="card rv"><h3>No Hindi</h3><p>Locall's users are in Durg and Bhilai. The redesign switches English ⇄ हिन्दी live, with a Devanagari font and taller lines for matras.</p></div>
-      <div class="card rv"><h3>Touch targets</h3><p>Several icons were under 48 dp. Every tappable thing in the redesign is 44–56 dp, with hit slop on small icons.</p></div>
-      <div class="card rv"><h3>Urgency without honesty</h3><p>Countdowns only appear in the last 6 hours; otherwise "Ends Fri, 6 Nov". India's 2023 dark-pattern guidelines ban false urgency.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PERSONAS -->
-<section class="tint curve-top" id="people">
-  <div class="wrap">
-    <span class="hand rv">who it's for</span>
-    <h2 class="rv">"Everyone" in Durg means <em>these three.</em></h2>
-    <div class="personas">
-      <article class="persona rv">
-        <div class="av" style="background:#FFE2CC;color:var(--orange-deep)">M</div>
-        <h3>Meena, 46</h3>
-        <p class="tagline">Runs the house in Shankar Nagar. Buys something locally almost every day.</p>
-        <dl>
-          <div><dt>Phone</dt><dd>A ₹9,000 Android. Reads Hindi faster than English. Lives on WhatsApp.</dd></div>
-          <div><dt>Needs</dt><dd>Big clear prices, Hindi, and to know the shop is real before she walks there.</dd></div>
-          <div><dt>Designed for her</dt><dd>हिन्दी switch · 16 sp body · Verified + "Since 1987" · Call / WhatsApp on every deal</dd></div>
-        </dl>
-      </article>
-      <article class="persona rv">
-        <div class="av" style="background:var(--navy-tint);color:var(--navy)">R</div>
-        <h3>Rohan, 20</h3>
-        <p class="tagline">College student in Bhilai. Wants food under ₹100 within a short scooter ride.</p>
-        <dl>
-          <div><dt>Phone</dt><dd>Mid-range Android, patchy data on campus.</dd></div>
-          <div><dt>Needs</dt><dd>Compare fast, save for later, get pinged before a deal ends.</dd></div>
-          <div><dt>Designed for him</dt><dd>Radius map · "Ending today" rail · Saved grouped by ending soon · search that understands "sabzi"</dd></div>
-        </dl>
-      </article>
-      <article class="persona rv">
-        <div class="av" style="background:var(--success-tint);color:var(--success)">A</div>
-        <h3>Ashok ji, 63</h3>
-        <p class="tagline">Retired. Knows his shopkeepers by name and calls before going out.</p>
-        <dl>
-          <div><dt>Phone</dt><dd>Font size turned up. Gets lost in apps that move things around.</dd></div>
-          <div><dt>Needs</dt><dd>Fewer choices per screen, labels on every icon, no surprises.</dd></div>
-          <div><dt>Designed for him</dt><dd>Labelled tabs · Follow his shops · Undo instead of dialogs · layouts that survive 2× text</dd></div>
-        </dl>
-      </article>
-    </div>
-    <span class="assume rv">These are assumptions from the brief and the market, not interviews. Suggestion 10 is how I'd test them.</span>
-  </div>
-</section>
-
-<!-- JOURNEYS -->
-<section class="ink curve-top" id="journeys">
-  <div class="wrap">
-    <span class="hand rv">the interactive prototype</span>
-    <h2 class="rv">Five journeys. <em>Tap one, then play it.</em></h2>
-    <p class="lead rv" style="margin-top:18px">Each button loads the app at the starting screen. Everything you do is remembered (saved deals, follows, searches, orders), so the journeys connect. Profile › Prototype controls › Reset brings it back.</p>
-    <div class="journeys">
-      <div class="jlist">
-        <button class="j rv" data-route="/" aria-pressed="true">
-          <h3><i>01</i>Find a deal near me</h3>
-          <ol><li>Within 3 km</li><li>1 km</li><li>Food</li><li>Momos</li><li>Save</li><li>History</li></ol>
-          <p><b>Before:</b> six km chips, then a photo with "32%" and no shop name. <b>Now:</b> the card tells you the shop, distance, walk time and when it ends.</p>
-        </button>
-        <button class="j rv" data-route="/history?tab=searches">
-          <h3><i>02</i>Search again</h3>
-          <ol><li>History</li><li>Searches</li><li>“momos”</li><li>Results</li></ol>
-          <p>Past searches re-run in one tap and move to the top. Try typing <b>kapde</b> or <b>sabzi</b>: search understands Hinglish.</p>
-        </button>
-        <button class="j rv" data-route="/deal/d-kurta">
-          <h3><i>03</i>Support a local shop</h3>
-          <ol><li>Deal</li><li>Visit shop</li><li>Owner's story</li><li>Follow</li><li>Home rail</li></ol>
-          <p>Every shop has a face, a "since" year and a line from the owner. Follow puts them on your Home rail and Profile.</p>
-        </button>
-        <button class="j rv" data-route="/">
-          <h3><i>04</i>Reserve and see what you saved</h3>
-          <ol><li>Add</li><li>Cart</li><li>Reserve for pickup</li><li>Profile</li></ol>
-          <p>Reserve here, pay at the shop, show a pickup code. The order lands in Profile and the "You saved ₹" number goes up.</p>
-        </button>
-        <button class="j rv" data-route="/profile">
-          <h3><i>05</i>Use it in Hindi</h3>
-          <ol><li>Profile</li><li>Language</li><li class="hi">हिन्दी</li><li>Home</li></ol>
-          <p>Every label, deal, shop name and date switches. Prototype controls also preview every empty state as a new user.</p>
-        </button>
-      </div>
-      <div class="stage" id="liveStage">
-        <div class="phone">
-          <div class="phone-island"></div>
-          <div class="phone-screen"><div class="vp" id="liveScreen">
-            <img class="shot" src="img/after-home.jpg" alt="Prototype loading" width="600" height="1298">
-          </div></div>
-        </div>
-        <a class="btn ghost" href="../" target="_blank" rel="noopener">Open full screen ↗</a>
+        <p>Reading text is 16, never under 14; 12 to 13 only for badges and meta. Hindi gets lines about 18% taller.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SIGNATURE -->
-<section id="radius">
-  <div class="wrap sig">
+<!-- c) components -->
+<section class="wrap" id="components" aria-labelledby="comp-h">
+  <div class="stamp-head" data-reveal>
+    <span class="stamp big">c) Components</span>
+    <h2 class="big" id="comp-h">Twelve parts, cut from the running app</h2>
+  </div>
+  <p class="sec-lead mut" data-reveal>Each one is a screenshot of the real component at phone size. The code is in <code>src/components</code>, and the ticket, gold number, sky glow and photo slot live in <code>night.tsx</code>.</p>
+  <div class="comp-grid">
+    <article class="comp wide"><div class="pic"><img src="img/c-steal.webp" alt="Tonight's steal ticket" width="756" height="448" loading="lazy" style="max-height:220px"></div><div class="txt"><h3>Steal ticket</h3><p>The one glowing object on Home. The notch and perforation mark it as something you can use.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-feed.webp" alt="Deal card" width="740" height="820" loading="lazy"></div><div class="txt"><h3>Deal card</h3><p>Photo, shop, item, rating, distance and walk time, price and MRP, end time and Add.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-rail.webp" alt="Ending-soon rail card" width="352" height="440" loading="lazy"></div><div class="txt"><h3>Rail card</h3><p>For quick rows like "Ending soon". Price first, on a dark scrim.</p></div></article>
+    <article class="comp wide"><div class="pic"><img src="img/c-row.webp" alt="Saved deal row shaped like a ticket stub" width="740" height="264" loading="lazy" style="max-height:130px"></div><div class="txt"><h3>Ticket row</h3><p>Saved and viewed deals. The first one ending soon gets an ember glow.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-tiles.webp" alt="Shortcut tiles with gold 3D icons" width="780" height="396" loading="lazy"></div><div class="txt"><h3>Shortcut tiles</h3><p>Gold 3D icons with labels. Food, Kirana and Salon filter; the rest search or sort.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-savings.webp" alt="Savings hero with the gold rupee coin" width="780" height="640" loading="lazy"></div><div class="txt"><h3>Savings hero</h3><p>Profile's glowing object. It counts up once, from completed orders only.</p></div></article>
+    <article class="comp wide"><div class="pic"><img src="img/c-chips.webp" alt="Filter chips" width="596" height="120" loading="lazy"></div><div class="txt"><h3>Filter chips</h3><p>Radius, open now and sort. Selected chips turn gold.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-seg.webp" alt="Segmented control" width="740" height="148" loading="lazy"></div><div class="txt"><h3>Segmented</h3><p>Saved · Searches · Viewed, with counts.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-dock.webp" alt="Floating dock tab bar" width="498" height="120" loading="lazy"></div><div class="txt"><h3>Dock</h3><p>Icons only. The active tab grows into a gold capsule with its label.</p></div></article>
+    <article class="comp wide"><div class="pic"><img src="img/c-cta.webp" alt="Deal page action bar" width="780" height="174" loading="lazy"></div><div class="txt"><h3>Action bar</h3><p>Pay at shop, add to cart, and one gold "Use at counter".</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-slider.webp" alt="Slide to use at counter" width="740" height="168" loading="lazy"></div><div class="txt"><h3>Slide to use</h3><p>Drag to the end to use a deal. Screen readers get it as a single button.</p></div></article>
+    <article class="comp"><div class="pic"><img src="img/c-toast.webp" alt="Toast with an action" width="716" height="140" loading="lazy"></div><div class="txt"><h3>Toast</h3><p>One at a time, above the dock, with one action such as Undo or History.</p></div></article>
+  </div>
+</section>
+
+<!-- c) guidelines -->
+<section class="wrap" id="guidelines" aria-labelledby="rules-h" style="padding-top:0">
+  <div class="rules" data-reveal>
+    <div class="rules-top">
+      <h2 class="big" id="rules-h" style="font-size:clamp(2rem,4vw,3.4rem)">c) Guidelines: the house rules</h2>
+      <span class="mut" style="font-weight:600">9 rules for every new screen</span>
+    </div>
+    <ol>
+      <li><h3>Money is gold</h3><p>Only prices and savings are gold, so the eye finds the price first.</p></li>
+      <li><h3>One glowing object</h3><p>Each screen gets one: the steal ticket, the bookmark, the coin or the claim ticket.</p></li>
+      <li><h3>Deals are tickets</h3><p>Notches and a perforation mean "you can use this". Don't use the shape for anything else.</p></li>
+      <li><h3>Honest end times</h3><p>Countdown only in the last 6 hours. Before that, a plain day and time.</p></li>
+      <li><h3>Readable sizes</h3><p>Reading text is 16, never under 14; 12 to 13 only for badges and meta.</p></li>
+      <li><h3>Easy to tap</h3><p>44 px minimum on web, main buttons 48 to 60. One gold button per screen.</p></li>
+      <li><h3>Hindi is a first language</h3><p>Same layouts, taller lines, and no wide letter-spacing, which breaks Devanagari apart.</p></li>
+      <li><h3>Nothing covers content</h3><p>Only the dock floats, and every screen leaves room for it.</p></li>
+      <li><h3>Undo instead of a dialog</h3><p>Removing something happens at once and shows Undo for a few seconds.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- d) prototype -->
+<section class="ink" id="prototype" aria-labelledby="proto-h">
+  <div class="wrap proto">
     <div>
-      <span class="hand rv">the one idea I'd fight for</span>
-      <h2 class="rv">How far will you go? <em>Show me.</em></h2>
-      <p class="lead rv" style="margin-top:18px">Locall's search range was six chips in a row. I turned it into the thing that makes Locall different: a map of your neighbourhood. Drag across the rings or tap a distance, and shops pop into the circle as it grows.</p>
-      <div class="facts rv">
-        <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span>Live count: "16 deals from 15 shops", and the button says exactly what you'll get.</span></div>
-        <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span>Distance in minutes, not just km: "farthest about 20 min by scooter".</span></div>
-        <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span>A square-root scale, so 1 km and 20 km both fit one phone screen.</span></div>
-        <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span>Screen readers get it as an adjustable control (swipe up / down).</span></div>
+      <div class="tk-head" data-reveal><h2 id="proto-h">d) Play the prototype</h2></div>
+      <p class="sec-lead" data-reveal>Pick a journey and the app opens at its first screen. What you do carries over between journeys: saved deals, follows, searches and orders.</p>
+      <ul class="journeys" id="journeys">
+        <li><a class="jr" href="/" data-src="/" target="_blank" rel="noopener"><span class="num">01</span><span><b>Find a deal near me</b><span class="steps">Within 3 km → Food → a deal → Save → History</span></span></a></li>
+        <li><a class="jr" href="/deal/d-momos" data-src="/deal/d-momos" target="_blank" rel="noopener"><span class="num">02</span><span><b>Use a deal at the counter</b><span class="steps">Use at counter → slide the gold knob → Done → Profile</span></span></a></li>
+        <li><a class="jr" href="/history?tab=searches" data-src="/history?tab=searches" target="_blank" rel="noopener"><span class="num">03</span><span><b>Search again</b><span class="steps">History → Searches → tap one. Try typing <span lang="hi">खाना</span> or kapde.</span></span></a></li>
+        <li><a class="jr" href="/shop/navneet-kirana" data-src="/shop/navneet-kirana" target="_blank" rel="noopener"><span class="num">04</span><span><b>Support a local shop</b><span class="steps">Shop page → owner's note → Follow → Home rail</span></span></a></li>
+        <li><a class="jr" href="/profile" data-src="/profile" target="_blank" rel="noopener"><span class="num">05</span><span><b>Use it in Hindi</b><span class="steps">Profile → Language → हिन्दी. Every label, deal and date switches.</span></span></a></li>
+      </ul>
+      <p class="proto-note">Shops, prices and people are sample data. Shop hours use a fixed 6 PM clock so the demo makes sense at any hour; deal end times use the real clock. Profile › Prototype › Reset brings everything back.</p>
+    </div>
+    <div class="device" id="device" role="region" aria-label="Live prototype">
+      <div class="screen">
+        <img class="still" src="img/after-home.webp" alt="The redesigned app's Home screen" width="600" height="1298" loading="lazy">
+        <div class="load"><a class="btn blue" href="/" target="_blank" rel="noopener">Open the live app ↗</a></div>
       </div>
     </div>
-    <div class="sig-shots rv">
-      <img src="img/after-radius.jpg" alt="Radius sheet at 3 km showing 11 deals from 10 shops" width="600" height="1298" loading="lazy">
-      <img src="img/after-radius-10.jpg" alt="Radius sheet at 10 km showing 16 deals from 15 shops" width="600" height="1298" loading="lazy">
-    </div>
   </div>
 </section>
 
-<!-- DESIGN SYSTEM -->
-<section class="tint curve-top" id="system">
-  <div class="wrap">
-    <span class="hand rv">colour &amp; type</span>
-    <h2 class="rv">Taken from Locall's <em>own logo.</em></h2>
-    <p class="lead rv" style="margin-top:18px">The navy ribbon and orange pin in the logo became the whole palette, with warm paper underneath so photos of food and fabric look right. Ratios are measured with the WCAG formula.</p>
-    <div class="sys-grid">
-      <div class="sw rv"><div class="chip" style="background:#FF6B00;color:#0B1F4D">Orange</div><div class="meta"><b>orange</b><span class="mono">#FF6B00</span><span>Pins, indicators, progress, decoration.</span><span class="ratio bad">2.86:1 with white · no text on it</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#CF4A0C;color:#fff">Orange strong</div><div class="meta"><b>orangeStrong</b><span class="mono">#CF4A0C</span><span>Primary buttons, % OFF badges.</span><span class="ratio">4.53:1 white text ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#fff;color:#C2410C;border-bottom:1px solid var(--line)">Orange text</div><div class="meta"><b>orangeText</b><span class="mono">#C2410C</span><span>Links, selected icons, orange words.</span><span class="ratio">5.18:1 on white ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#FFF1E5;color:#9A3412">Orange tint</div><div class="meta"><b>orangeTint / orangeDeep</b><span class="mono">#FFF1E5 · #9A3412</span><span>Category tiles, urgent tags.</span><span class="ratio">6.6:1 ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#0B1F4D;color:#fff">Ink</div><div class="meta"><b>ink</b><span class="mono">#0B1F4D</span><span>All primary text, savings hero, toasts.</span><span class="ratio">15.4:1 on paper ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#0A2F8F;color:#fff">Navy</div><div class="meta"><b>navy</b><span class="mono">#0A2F8F</span><span>Verified ticks, info, "Following".</span><span class="ratio">11.2:1 ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#FFFAF5;color:#5A6378;border-bottom:1px solid var(--line)">Paper</div><div class="meta"><b>paper · muted</b><span class="mono">#FFFAF5 · #5A6378</span><span>App background, secondary text.</span><span class="ratio">5.8:1 ✓</span></div></div>
-      <div class="sw rv"><div class="chip" style="background:#E8F6EC;color:#15803D">Success</div><div class="meta"><b>success</b><span class="mono">#15803D</span><span>Open now, Save ₹, Picked up.</span><span class="ratio">5.0:1 ✓</span></div></div>
-    </div>
-    <div class="rule rv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="flex:none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>One rule keeps it accessible: bright orange is a fill, never a text background. Text that must be orange uses orangeText; buttons with white labels use orangeStrong.</span></div>
-
-    <div class="type-spec">
-      <div class="spec rv">
-        <span class="mono" style="color:var(--muted)">LATIN · PLUS JAKARTA SANS (Locall's site font)</span>
-        <div class="big">Aa ₹549</div>
-        <div class="scale">
-          <div><span class="mono">display 28/34 · 800</span><span style="font-size:28px;font-weight:800;letter-spacing:-.02em">History</span></div>
-          <div><span class="mono">title 22/28 · 800</span><span style="font-size:22px;font-weight:800">₹69 <s style="font-size:13px;color:var(--muted);font-weight:500">₹100</s></span></div>
-          <div><span class="mono">heading 18/24 · 700</span><span style="font-size:18px;font-weight:700">Deals near you</span></div>
-          <div><span class="mono">body 16/24 · 500</span><span style="font-size:16px">Fresh dough every evening.</span></div>
-          <div><span class="mono">label 14/20 · 600</span><span style="font-size:14px;font-weight:600">Within 3 km</span></div>
-          <div><span class="mono">small 13/18 · 500</span><span style="font-size:13px;color:var(--muted)">400 m · 5 min walk</span></div>
-          <div><span class="mono">micro 12/16 · 700</span><span style="font-size:12px;font-weight:700;color:var(--orange-deep)">31% OFF</span></div>
-        </div>
-      </div>
-      <div class="spec rv">
-        <span class="mono" style="color:var(--muted)">DEVANAGARI · NOTO SANS DEVANAGARI · line height ×1.18</span>
-        <div class="big hi">अ ₹549</div>
-        <div class="scale hi">
-          <div><span class="mono">display</span><span style="font-size:28px;font-weight:700">हिस्ट्री</span></div>
-          <div><span class="mono">heading</span><span style="font-size:18px;font-weight:700">आपके पास के ऑफ़र</span></div>
-          <div><span class="mono">body</span><span style="font-size:16px">हर शाम ताज़ा आटा।</span></div>
-          <div><span class="mono">label</span><span style="font-size:14px;font-weight:700">3 km के अंदर</span></div>
-          <div><span class="mono">small</span><span style="font-size:13px;color:var(--muted)">400 m · 5 मिनट पैदल</span></div>
-        </div>
-        <p style="margin-top:18px;font-size:14px;color:var(--muted)">Body text never goes below 14; primary body is 16. Every screen still works with Android font size at 200% (text is capped at 2×).</p>
-      </div>
-    </div>
-
-    <div class="tokens">
-      <div class="tok rv"><h3>Spacing (4-pt)</h3><div class="bars"><div><i style="width:4px"></i>xs 4</div><div><i style="width:8px"></i>s 8</div><div><i style="width:12px"></i>m 12</div><div><i style="width:16px"></i>l 16</div><div><i style="width:20px"></i>xl 20 · screen gutter</div><div><i style="width:24px"></i>xxl 24 · between sections</div><div><i style="width:48px"></i>huge 48</div></div></div>
-      <div class="tok rv"><h3>Radius</h3><div class="radii"><div style="border-radius:8px">8</div><div style="border-radius:12px">12</div><div style="border-radius:16px">16</div><div style="border-radius:20px">20</div><div style="border-radius:28px">28</div><div style="border-radius:999px">pill</div></div><p style="margin-top:12px;font-size:14px;color:var(--ink-soft)">Badges 8 · thumbnails 12 · rows 16 · cards 20 · sheets 28 · chips &amp; buttons pill.</p></div>
-      <div class="tok rv"><h3>Motion: three springs</h3><div class="motion-demo"><button data-demo="press">press</button><button data-demo="pop">pop</button><button data-demo="sheet">sheet</button></div><p style="margin-top:12px;font-size:14px;color:var(--ink-soft)">Press squishes to 0.97. Save pops to 1.35 with a success haptic. Sheets settle without bounce. All of it turns off with the system "reduce motion" setting.</p></div>
-      <div class="tok rv"><h3>Touch &amp; icons</h3><p style="font-size:14.5px;color:var(--ink-soft)">48 dp minimum target (44 for secondary). Lucide icons, 2–2.6 stroke, always with a text label in navigation and buttons. Haptics on save, follow, add and tab changes (Android).</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- COMPONENTS -->
-<section id="components">
-  <div class="wrap">
-    <span class="hand rv">reusable components</span>
-    <h2 class="rv">Fourteen parts. <em>Every screen</em> is built from them.</h2>
-    <p class="lead rv" style="margin-top:18px">These are crops from the running app, not drawings. Each lives in <span class="mono">src/components</span> and reads only from the tokens.</p>
-    <div class="comp-grid">
-      <article class="comp w6 rv"><figure><img src="img/c-deal-card.png" alt="Deal card component" loading="lazy"></figure><div class="body"><h3>Deal card <code>DealCard</code></h3><p>The workhorse. Six facts without a tap: item, shop (+ verified), rating with count, distance + walk/ride time, price vs MRP, end time. Bookmark and Add are separate targets.</p><div class="dd"><div class="do"><b>Do</b>Use a real photo of the item. Show "Save ₹" with the %.</div><div class="dont"><b>Don't</b>Float buttons over the shop name. Show a % with no item name.</div></div></div></article>
-      <article class="comp w6 rv"><figure><img src="img/c-radius.png" alt="Radius map component" loading="lazy"></figure><div class="body"><h3>Radius map <code>RadiusSheet</code></h3><p>Rings at 1 · 3 · 5 · 10 · 20 km on a √ scale; pins spring in by distance; the primary button states the result count.</p><div class="dd"><div class="do"><b>Do</b>Say the count on the button: "Show 16 deals".</div><div class="dont"><b>Don't</b>Go back to a row of six km chips.</div></div></div></article>
-      <article class="comp rv"><figure><img src="img/c-rail-card.png" alt="Rail card" loading="lazy"></figure><div class="body"><h3>Rail card <code>RailCard</code></h3><p>Compact card for horizontal rails: "Ending today", "More from this shop", "More deals nearby".</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-row-card.png" alt="Row card" loading="lazy"></figure><div class="body"><h3>Row card <code>RowCard</code></h3><p>Lists: History, search results. Takes a trailing slot (bookmark, "See similar"). Ended deals dim to 60%.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-savings.png" alt="Savings card" loading="lazy"></figure><div class="body"><h3>Savings hero <code>SavingsCard</code></h3><p>Counts up once, fills the milestone bar. Zero state invites the first saving instead of showing ₹0.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-categories.png" alt="Category tiles" loading="lazy"></figure><div class="body"><h3>Category tile</h3><p>Icon + label, 56 dp. Selected turns ink. Labels never truncate in English or Hindi.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-chips.png" alt="Filter chips" loading="lazy"></figure><div class="body"><h3>Chip <code>Chip</code></h3><p>Filters and quick picks. Leading icon, optional chevron when it opens a sheet. 40 dp tall, pill.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-tabbar.png" alt="Tab bar" loading="lazy"></figure><div class="body"><h3>Tab bar <code>TabBar</code></h3><p>Docked, always labelled, three tabs (the assigned flows). Selected gets a tint pill that springs in.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-segmented.png" alt="Segmented control" loading="lazy"></figure><div class="body"><h3>Segmented <code>Segmented</code></h3><p>Switches views inside a screen (Saved · Searches · Viewed, English · हिन्दी). Counts inline.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-buttons.png" alt="Buttons" loading="lazy"></figure><div class="body"><h3>Buttons <code>Button</code></h3><p>Primary (orangeStrong), secondary (outline), ghost, WhatsApp. One primary per screen.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-contact.png" alt="Contact row" loading="lazy"></figure><div class="body"><h3>Contact row <code>ContactRow</code></h3><p>Call · WhatsApp · Directions. Replaces the floating chat bubble with the way Durg actually talks to shops.</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-follow.png" alt="Follow button" loading="lazy"></figure><div class="body"><h3>Follow <code>FollowButton</code></h3><p>Locall's "Subscribe", renamed and explained: "Get their new deals first".</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-empty.png" alt="Empty state" loading="lazy"></figure><div class="body"><h3>Empty state <code>EmptyState</code></h3><p>Status + hint + one button. Every list has one; preview them all with "Preview as a new user".</p></div></article>
-      <article class="comp rv"><figure><img src="img/c-toast.png" alt="Toast with undo" loading="lazy"></figure><div class="body"><h3>Toast <code>Toast</code></h3><p>One at a time, above the nav, 5 s when it carries Undo or a shortcut ("Saved · History").</p></div></article>
-    </div>
-  </div>
-</section>
-
-<!-- GUIDELINES -->
-<section class="ink curve-top" id="guidelines">
-  <div class="wrap">
-    <span class="hand rv">design guidelines</span>
-    <h2 class="rv">Rules that keep it <em>usable by everyone.</em></h2>
-    <div class="guides">
-      <div class="guide rv"><h3>Layout &amp; reading</h3><ul>
-        <li>Deals start on the first screen. Max one row of filters above them.</li>
-        <li>Nothing floats over content. Nav is docked; scroll views end with safe padding.</li>
-        <li>20 dp screen gutter, 24 dp between sections, 16 dp between cards.</li>
-        <li>Never show coordinates, IDs or raw emails as names.</li>
-        <li>Layouts must survive 2× system font and Hindi line heights.</li>
-      </ul></div>
-      <div class="guide rv"><h3>Words &amp; numbers</h3><ul>
-        <li>Rupees as <code>₹1,299</code> (Indian grouping). Never "Rs.".</li>
-        <li>Discounts as "31% OFF" plus "Save ₹31".</li>
-        <li>Distance in m under 1 km, then km, always with minutes (walk ≤1.5 km, else scooter).</li>
-        <li>Time left: a countdown only in the last 6 hours; otherwise "Ends today 9:00 pm".</li>
-        <li>Everyday Hindi (ऑफ़र, कार्ट, सेव), not textbook Hindi.</li>
-      </ul></div>
-      <div class="guide rv"><h3>Interaction</h3><ul>
-        <li>Every icon in navigation or a button has a text label.</li>
-        <li>Targets ≥48 dp; small icons get hit slop.</li>
-        <li>Undo instead of "Are you sure?" for anything reversible.</li>
-        <li>Haptic only on meaningful moments: save, follow, add, reserve.</li>
-        <li>Motion is spring-based, ≤300 ms to settle, and off under reduce motion.</li>
-      </ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- LANGUAGE -->
-<section id="hindi">
-  <div class="wrap">
-    <span class="hand rv">for everyone, literally</span>
-    <h2 class="rv">One switch. <em class="hi" style="font-style:normal">पूरा ऐप हिन्दी में।</em></h2>
-    <p class="lead rv" style="margin-top:18px">Labels, deal titles, shop names, owner quotes, dates and search all switch. Search also understands Hinglish: "kapde", "sabzi", "mithai", "bartan".</p>
-    <div class="lang">
-      <figure class="rv"><img src="img/after-home-hi.jpg" alt="Home screen in Hindi" width="600" height="1298" loading="lazy"><figcaption>Home · हिन्दी</figcaption></figure>
-      <figure class="rv"><img src="img/after-profile-hi.jpg" alt="Profile screen in Hindi" width="600" height="1298" loading="lazy"><figcaption>Profile · हिन्दी</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<!-- SUGGESTIONS -->
-<section class="tint curve-top" id="suggestions">
-  <div class="wrap">
-    <span class="hand rv">beyond the three screens</span>
-    <h2 class="rv">Ten suggestions, <em>ranked.</em></h2>
-    <p class="lead rv" style="margin-top:18px">Ranked by impact on "find a deal and act on it", against the effort for a small team.</p>
-    <div class="sugg">
-      <div class="sg rv"><div class="num">01</div><div><h3>Browse before login; ask language and area in two taps</h3><p>First launch: pick हिन्दी / English, confirm the area, see deals. Ask for a phone number only when someone reserves.</p><span class="where">onboarding</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●○○</b></span></div></div>
-      <div class="sg rv"><div class="num">02</div><div><h3>Listing rules in Locall Partner</h3><p>Require item name, a real photo, MRP and an end time. Flag discounts over 70% for a quick check. One "iPhone for ₹150" costs more trust than ten good deals earn.</p><span class="where">vendor app</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●●○</b></span></div></div>
-      <div class="sg rv"><div class="num">03</div><div><h3>Remind me before a saved deal ends</h3><p>One push 3 hours before a saved deal ends, at most one a day. Saving becomes a reason to come back.</p><span class="where">notifications</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●○○</b></span></div></div>
-      <div class="sg rv"><div class="num">04</div><div><h3>Share a deal to WhatsApp as a card</h3><p>Photo, price, shop, distance and a link that opens the deal. Locall is already WhatsApp-first; this is the cheapest growth loop it has.</p><span class="where">deal page</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●○○</b></span></div></div>
-      <div class="sg rv"><div class="num">05</div><div><h3>Reserve + pickup code instead of a vague cart</h3><p>Prototyped here: reserve, pay at the shop, show "LC-4821". It gives shops a reason to honour the price and Locall a way to count real visits.</p><span class="where">cart → orders</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●●○</b></span></div></div>
-      <div class="sg rv"><div class="num">06</div><div><h3>Reviews only after a pickup</h3><p>Unlock "Rate this shop" after the code is used, with an optional photo. Ratings people can trust are the moat against Google Maps.</p><span class="where">profile → reviews</span></div><div class="ie"><span>impact <b class="dots">●●○</b></span><span>effort <b class="dots">●●○</b></span></div></div>
-      <div class="sg rv"><div class="num">07</div><div><h3>One brand across site and app</h3><p>locall.co.in leads with blue (#2563EB); the app leads with orange. Pick the logo's pair everywhere: orange for action, navy for text.</p><span class="where">brand</span></div><div class="ie"><span>impact <b class="dots">●●○</b></span><span>effort <b class="dots">●○○</b></span></div></div>
-      <div class="sg rv"><div class="num">08</div><div><h3>Map / list toggle on Home</h3><p>The radius map already exists; let people browse pins on it. Useful in markets like Indira Market where shops are side by side.</p><span class="where">home</span></div><div class="ie"><span>impact <b class="dots">●●○</b></span><span>effort <b class="dots">●●●</b></span></div></div>
-      <div class="sg rv"><div class="num">09</div><div><h3>Built for patchy data</h3><p>Cache the last feed and show "updated 10 min ago"; small WebP images with blur placeholders; a Wi-Fi-only photos setting.</p><span class="where">performance</span></div><div class="ie"><span>impact <b class="dots">●●○</b></span><span>effort <b class="dots">●●○</b></span></div></div>
-      <div class="sg rv"><div class="num">10</div><div><h3>Test with five people in Durg before building more</h3><p>Three tasks: "find a snack under ₹100 within 1 km", "find the deal you saved yesterday", "switch to Hindi". Watch, time, note where they hesitate.</p><span class="where">research</span></div><div class="ie"><span>impact <b class="dots">●●●</b></span><span>effort <b class="dots">●○○</b></span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- MEASURE -->
-<section id="measure">
-  <div class="wrap">
-    <span class="hand rv">how I'd know it worked</span>
-    <h2 class="rv">Hypotheses, <em>not results.</em></h2>
-    <p class="lead rv" style="margin-top:18px">This is a prototype with sample data, so there are no results to claim yet. These are the bets and how to check them.</p>
-    <div class="measure">
-      <div class="card rv"><table>
-        <thead><tr><th>If we…</th><th>…we expect</th></tr></thead>
-        <tbody>
-          <tr><td>Show shop, distance and end time on every card</td><td>More deal opens per session; fewer back-and-forth taps</td></tr>
-          <tr><td>Make History hold searches + saved deals</td><td>More return sessions that start in History</td></tr>
-          <tr><td>Rename Subscribe → Follow with a reason</td><td>More follows per new user in week 1</td></tr>
-          <tr><td>Add Hindi</td><td>Higher day-7 retention for Hindi-first users</td></tr>
-        </tbody></table></div>
-      <div class="card rv"><table>
-        <thead><tr><th>Metric</th><th>Event to log</th></tr></thead>
-        <tbody>
-          <tr><td>Time to first deal open</td><td><span class="mono">app_open → deal_view</span></td></tr>
-          <tr><td>Save rate · Saved → reserved</td><td><span class="mono">deal_save · reserve</span></td></tr>
-          <tr><td>Follow rate</td><td><span class="mono">shop_follow</span></td></tr>
-          <tr><td>Radius changes · result count</td><td><span class="mono">radius_set{km,n}</span></td></tr>
-          <tr><td>Language share</td><td><span class="mono">lang_set{hi|en}</span></td></tr>
-        </tbody></table></div>
-    </div>
-  </div>
-</section>
-
-<!-- BUILD -->
-<section class="ink curve-top" id="build">
-  <div class="wrap">
-    <span class="hand rv">how it's built</span>
-    <h2 class="rv">A real React Native app, <em>ready to hand over.</em></h2>
-    <div class="build">
-      <div class="rv">
-        <p class="lead">Expo SDK 58 with Expo Router. Runs on Android and iOS through Expo Go, and on the web (this page embeds the web build). Tokens, strings and components are separate, so Locall's developers can lift the system into their app.</p>
-        <div class="stack"><span>Expo SDK 58</span><span>React Native 0.88</span><span>Expo Router</span><span>Reanimated 4</span><span>expo-image</span><span>expo-haptics</span><span>Lucide icons</span><span>AsyncStorage</span><span>TypeScript</span></div>
-        <div class="qr"><div id="qrcode" role="img" aria-label="QR code to open the prototype on your phone"></div><div><b>Open it on your phone</b><p style="font-size:14px;color:var(--ink-soft);margin-top:4px">Scan to try the web build. On Android, the repo README shows how to run it natively with Expo Go.</p></div></div>
-      </div>
-      <div class="files rv"><b>src/</b>
-  theme/tokens.ts      <span style="color:var(--on-ink-muted)">colours + ratios, type, space, motion</span>
-  i18n/strings.ts      <span style="color:var(--on-ink-muted)">English + हिन्दी</span>
-  data/catalog.ts      <span style="color:var(--on-ink-muted)">sample shops + deals (Durg)</span>
-  store/store.tsx      <span style="color:var(--on-ink-muted)">saved, searches, follows, cart</span>
-  lib/format.ts        <span style="color:var(--on-ink-muted)">₹, distance, honest end times</span>
-  lib/query.ts         <span style="color:var(--on-ink-muted)">filters + Hinglish search</span>
-  <b>components/</b>
-    deal-card · radius-sheet · sheet
-    tab-bar · toast · ui · shop-bits
-  <b>app/</b>
-    (tabs)/index · history · profile
-    deal/[id] · shop/[id] · search</div>
-    </div>
-  </div>
+<!-- e) ideas -->
+<section class="wrap" id="ideas" aria-labelledby="ideas-h">
+  <h2 class="big" id="ideas-h" data-reveal>e) What I'd <span class="lux">do next</span></h2>
+  <p class="sec-lead mut" data-reveal>Ten ideas beyond the three screens, ranked by how much they help someone find a deal and use it, against the work for a small team.</p>
+  <ol class="ideas">
+    <li class="idea" data-reveal><span class="n">01</span><div><h3>Browse before login</h3><p>First launch asks for language and area in two taps, then shows deals. Ask for a phone number only when someone reserves.</p></div><span class="meta">Onboarding<br>Impact high · effort low</span></li>
+    <li class="idea" data-reveal><span class="n">02</span><div><h3>Listing checks in Locall Partner</h3><p>Require an item name, a real photo, the MRP and an end time, and flag discounts over 70% for a quick look. One listing like an iPhone at ₹150 makes every other price look doubtful.</p></div><span class="meta">Vendor app<br>Impact high · effort medium</span></li>
+    <li class="idea" data-reveal><span class="n">03</span><div><h3>A reminder before a saved deal ends</h3><p>One notification 3 hours before, at most one a day. It gives people a reason to come back to what they saved.</p></div><span class="meta">Notifications<br>Impact high · effort low</span></li>
+    <li class="idea" data-reveal><span class="n">04</span><div><h3>Share a deal to WhatsApp as a card</h3><p>Photo, price, shop, distance and a link that opens the deal. Locall already works through WhatsApp, so this costs little to build.</p></div><span class="meta">Deal page<br>Impact high · effort low</span></li>
+    <li class="idea" data-reveal><span class="n">05</span><div><h3>A counter code instead of a vague cart</h3><p>Built into the prototype: use a deal at the counter and the shop sees a short code. Shops get a reason to honour the price, and Locall gets a count of real visits.</p></div><span class="meta">Cart → orders<br>Impact high · effort medium</span></li>
+  </ol>
+  <details>
+    <summary>Show all 10</summary>
+    <ol class="ideas">
+      <li class="idea"><span class="n">06</span><div><h3>Reviews only after a visit</h3><p>"Rate this shop" unlocks after the counter code is used, with an optional photo. Reviews tied to a real visit are harder to fake.</p></div><span class="meta">Profile → reviews<br>Impact medium · effort medium</span></li>
+      <li class="idea"><span class="n">07</span><div><h3>One brand across site and app</h3><p>locall.co.in leads with blue and the app leads with orange. Pick one pair and use it everywhere.</p></div><span class="meta">Brand<br>Impact medium · effort low</span></li>
+      <li class="idea"><span class="n">08</span><div><h3>Map or list on Home</h3><p>The radius map already exists. Browsing pins helps in markets like Indira Market, where shops sit side by side.</p></div><span class="meta">Home<br>Impact medium · effort high</span></li>
+      <li class="idea"><span class="n">09</span><div><h3>Built for patchy data</h3><p>Keep the last feed and show "updated 10 min ago", serve small WebP images with blurred placeholders, and add a Wi-Fi-only photos setting.</p></div><span class="meta">Performance<br>Impact medium · effort medium</span></li>
+      <li class="idea"><span class="n">10</span><div><h3>Test with five people in Durg first</h3><p>Three tasks: find a snack under ₹100 within 1 km, find the deal you saved yesterday, switch to Hindi. Watch where they hesitate before building more.</p></div><span class="meta">Research<br>Impact high · effort low</span></li>
+    </ol>
+  </details>
 </section>
 </main>
 
-<footer>
+<footer class="ink">
   <div class="wrap">
-    <div><b>Aayush Thakur</b> · for Locall (Localstack Market Pvt Ltd)<small>All shops, prices, ratings and people in the prototype are sample data. "Momo Land" and "Navneet Kirana Stores" come from Locall's own demo screenshots. Food and shop photos: Pexels (credits in the repo).</small></div>
-    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="https://github.com/aayush-t-exe/locall-redesign">GitHub repo</a><a href="https://aayushthakur.vercel.app">Portfolio</a><a href="mailto:aayushthakur8002@gmail.com">aayushthakur8002@gmail.com</a></div>
+    <div class="foot">
+      <div>
+        <h2>Thanks for <span class="lux" style="color:var(--blue-i)">reading</span></h2>
+        <p class="mut">Made by Aayush Thakur for the Locall mobile app internship assignment. The app, this page and the README are in one repo.</p>
+      </div>
+      <div class="cta">
+        <a class="btn blue" href="/" target="_blank" rel="noopener">Open the prototype ↗</a>
+        <a class="btn line" style="border-color:var(--paper);color:var(--paper)" href="https://github.com/aayush-t-exe/locall-redesign" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <p class="credits">Shops, prices, ratings and people in the prototype are sample data for Durg and Bhilai. "Momo Land" and "Navneet Kirana Stores" come from Locall's own demo screenshots. Food and shop photos are placeholders and belong to their owners. Gold 3D icons: 3dicons (CC0). The Locall logo belongs to Localstack Market Pvt Ltd.</p>
   </div>
 </footer>
-<div class="grain" aria-hidden="true"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script>
-(() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Reveal on scroll, with a failsafe so nothing stays hidden.
-  const els = document.querySelectorAll('.rv');
-  if ('IntersectionObserver' in window && !reduce) {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-    els.forEach((el) => io.observe(el));
+  /* Signature: slide the ticket's knob to "use" the deal. Keyboard: Enter or Space on the knob. */
+  var ticket = document.getElementById('ticket'), slide = document.getElementById('slide'),
+      knob = document.getElementById('knob'), status = document.getElementById('ticketStatus'),
+      again = document.getElementById('again'), x = 0, start = 0, dragging = false, moved = false;
+  function max() { return slide.clientWidth - knob.offsetWidth - 12; }
+  function place(v, animate) {
+    knob.style.transition = animate && !reduce ? 'transform .35s cubic-bezier(.34,1.56,.64,1)' : 'none';
+    knob.style.transform = 'translateX(' + v + 'px)';
   }
-  setTimeout(() => els.forEach((el) => el.classList.add('in')), reduce ? 0 : 3500);
+  function used() { return ticket.classList.contains('used'); }
+  function use() {
+    x = max(); place(x, true); ticket.classList.add('used');
+    status.textContent = 'Used at the counter. In the app, this adds ₹31 to your savings.';
+    again.hidden = false;
+  }
+  function reset() {
+    x = 0; moved = false; place(0, true); ticket.classList.remove('used');
+    status.textContent = 'Shops, prices and people are sample data.'; again.hidden = true; knob.focus();
+  }
+  knob.addEventListener('pointerdown', function (e) {
+    if (used()) return; dragging = true; moved = false; start = e.clientX - x; knob.setPointerCapture(e.pointerId);
+  });
+  knob.addEventListener('pointermove', function (e) {
+    if (!dragging) return; x = Math.min(Math.max(e.clientX - start, 0), max()); if (x > 4) moved = true; place(x);
+  });
+  function end() {
+    if (!dragging) return; dragging = false;
+    if (x > max() * 0.8) use(); else { x = 0; place(0, true); }
+  }
+  knob.addEventListener('pointerup', end);
+  knob.addEventListener('pointercancel', end);
+  knob.addEventListener('click', function (e) {
+    // A click from the keyboard (detail 0) uses the deal; a tap without dragging just nudges as a hint.
+    if (used() || moved) return;
+    if (e.detail === 0) return use();
+    if (!reduce && slide.animate) slide.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+  });
+  again.addEventListener('click', reset);
 
-  // Before/after sliders
-  document.querySelectorAll('[data-compare]').forEach((c) => {
-    const input = c.querySelector('input');
-    const set = (v) => c.style.setProperty('--pos', v + '%');
-    input.addEventListener('input', () => set(input.value));
-    set(input.value);
+  /* Reveal on scroll: only with motion allowed, only for things below the first screen, with a failsafe. */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var items = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    // Read every position first, then write, so the page lays out once instead of once per element.
+    var tops = items.map(function (el) { return el.getBoundingClientRect().top; });
+    items.forEach(function (el, i) { if (tops[i] < innerHeight) el.classList.add('in'); });
+    document.documentElement.classList.add('motion');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    items.forEach(function (el) { if (!el.classList.contains('in')) io.observe(el); });
+    setTimeout(function () { items.forEach(function (el) { el.classList.add('in'); }); }, 4000);
+  }
+
+  /* Prototype: one live iframe, desktop only, mounted when the section comes near. Journeys swap its route. */
+  var device = document.getElementById('device'), screen = device.querySelector('.screen'), frame = null;
+  var desktop = matchMedia('(min-width: 1101px)').matches;
+  function mount(src) {
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.title = 'Locall redesign prototype';
+      screen.innerHTML = ''; screen.appendChild(frame);
+    }
+    frame.src = src;
+  }
+  if (desktop && 'IntersectionObserver' in window) {
+    var near = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { mount('/'); near.disconnect(); } }, { rootMargin: '300px 0px' });
+    near.observe(device);
+  }
+  [].forEach.call(document.querySelectorAll('.jr'), function (a) {
+    a.addEventListener('click', function (e) {
+      if (!desktop) return; // phones open the app in a new tab
+      e.preventDefault(); mount(a.getAttribute('data-src'));
+      [].forEach.call(document.querySelectorAll('.jr'), function (b) { b.removeAttribute('aria-current'); });
+      a.setAttribute('aria-current', 'true');
+    });
   });
 
-  // Live phone: iframe the web build, scaled to the frame
-  const APP = new URL('../', location.href).href.replace(/\/$/, '');
-  function mount(screen, route) {
-    let f = screen.querySelector('iframe');
-    if (!f) {
-      f = document.createElement('iframe');
-      f.title = 'Locall prototype';
-      f.loading = 'lazy';
-      // Keep the screenshot until the app has actually rendered inside the frame.
-      f.addEventListener('load', () => {
-        let tries = 0;
-        const check = () => {
-          let ready = false;
-          try { ready = (f.contentDocument?.body?.innerText || '').length > 40; } catch { ready = true; }
-          if (ready || ++tries > 40) screen.querySelectorAll('.shot, .cycle').forEach((n) => n.remove());
-          else setTimeout(check, 250);
-        };
-        check();
-      });
-      screen.appendChild(f);
-      const fit = () => { const s = screen.clientWidth / 390; f.style.transform = `scale(${s})`; f.style.height = (screen.clientHeight / s) + 'px'; };
-      new ResizeObserver(fit).observe(screen); fit();
-    }
-    f.src = APP + route;
+  /* Specimen fonts (the app's own faces) load only when the colour section gets close. */
+  var spec = document.getElementById('colour'), specDone = false;
+  function loadSpec() {
+    if (specDone) return; specDone = true;
+    var l = document.createElement('link'); l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=Instrument+Serif:ital@1&family=Noto+Sans+Devanagari:wght@500&display=swap';
+    document.head.appendChild(l);
   }
-  const big = matchMedia('(min-width: 901px)').matches;
-  const live = document.getElementById('liveScreen');
-  const jbtns = document.querySelectorAll('.j');
-  jbtns.forEach((b) => b.addEventListener('click', () => {
-    jbtns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    mount(live, b.dataset.route);
-    if (!big) document.getElementById('liveStage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
-  }));
-  // Mount the journeys phone once it's near; the hero phone goes live on desktop after load.
-  const io2 = new IntersectionObserver((es) => { if (es[0].isIntersecting) { mount(live, '/'); io2.disconnect(); } }, { rootMargin: '400px' });
-  io2.observe(live);
-  if (big) addEventListener('load', () => setTimeout(() => { mount(document.getElementById('heroScreen'), '/'); document.getElementById('heroStage').classList.add('live'); }, 1200));
+  if ('IntersectionObserver' in window) {
+    var so = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { loadSpec(); so.disconnect(); } }, { rootMargin: '800px 0px' });
+    so.observe(spec);
+  } else loadSpec();
 
-  // Motion token demo
-  const springs = { press: 'scale(.92)', pop: 'scale(1.25)', sheet: 'translateY(-10px)' };
-  document.querySelectorAll('[data-demo]').forEach((b) => b.addEventListener('click', () => {
-    if (reduce) return;
-    b.animate([{ transform: 'none' }, { transform: springs[b.dataset.demo] }, { transform: 'none' }], { duration: b.dataset.demo === 'sheet' ? 520 : 380, easing: b.dataset.demo === 'sheet' ? 'cubic-bezier(.16,1,.3,1)' : 'cubic-bezier(.34,1.56,.64,1)' });
-  }));
-
-  // QR to this deployment's app
-  addEventListener('load', () => { if (window.QRCode) { new QRCode(document.getElementById('qrcode'), { text: APP + '/', width: 232, height: 232, colorDark: '#0B1F4D', colorLight: '#FFFFFF' }); setTimeout(() => document.querySelectorAll('#qrcode img').forEach((i) => (i.alt = '')), 50); } });
+  /* Nav: mark the section in view. */
+  var links = [].slice.call(document.querySelectorAll('.nav ul a'));
+  var secs = links.map(function (l) { return document.querySelector(l.getAttribute('href')); });
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (l) { l.removeAttribute('aria-current'); });
+        var i = secs.indexOf(e.target); if (i > -1) links[i].setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(function (s) { if (s) spy.observe(s); });
+  }
 })();
 </script>
 </body>
