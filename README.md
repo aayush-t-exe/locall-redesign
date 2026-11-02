@@ -1,65 +1,113 @@
-# Locall redesign: Home, History, Profile
+<p align="center">
+  <img src="docs/readme/banner.jpg" alt="Locall redesign: the Home, Use at counter and Profile screens on three phones, with the line Find a deal. Use it at the counter." width="100%">
+</p>
 
-A redesign of the [Locall](https://locall.co.in) app's three main screens, built as a working Expo (React Native) app. The design direction is **Locall Night**: a deep navy night, one glowing object per screen, and gold for money.
+# Locall redesign
 
-- **Prototype** (web build of the app): https://locall-redesign.vercel.app/
-- **Case study:** https://locall-redesign.vercel.app/case-study/
-- **Run it on a phone:** see [Run it](#run-it)
+[Locall](https://locall.co.in) shows offers from shops near you in Durg and Bhilai. For my mobile app internship assignment I redesigned its Home, History and Profile and built them as a working Expo (React Native) app.
 
-> All shops, prices, ratings and people in the app are sample data for Durg and Bhilai. "Momo Land" and "Navneet Kirana Stores" come from Locall's own demo screenshots. Call and WhatsApp buttons open Locall's real public contact number, so don't spam it while testing.
+**[Try the prototype](https://locall-redesign.vercel.app/)** · **[Read the case study](https://locall-redesign.vercel.app/case-study/)**
 
-## What was asked, and where it is
+It opens in any phone browser. Shops, prices and people in it are sample data.
 
-| Asked | Where |
+## Screens
+
+<table>
+  <tr>
+    <td width="33%" align="center"><img src="docs/readme/home.jpg" alt="Home screen with the Tonight's steal ticket for momos at ₹69, gold shortcut tiles and the floating dock" width="100%"><br><b>Home</b><br>Tonight's steal comes first</td>
+    <td width="33%" align="center"><img src="docs/readme/history.jpg" alt="History screen with saved deals shown as ticket stubs, grouped into ending soon and still on" width="100%"><br><b>History</b><br>Saved deals as tickets</td>
+    <td width="33%" align="center"><img src="docs/readme/profile.jpg" alt="Profile screen with a gold rupee coin and ₹392 saved so far" width="100%"><br><b>Profile</b><br>What you saved so far</td>
+  </tr>
+  <tr>
+    <td width="33%" align="center"><img src="docs/readme/deal.jpg" alt="Deal page for Chicken Steamed Momos with shop details and a gold Use at counter button" width="100%"><br><b>Deal</b><br>Shop, price, one gold button</td>
+    <td width="33%" align="center"><img src="docs/readme/claim.jpg" alt="Use at counter screen with a glowing ticket, the code ML·69TY and a gold slider" width="100%"><br><b>Use at counter</b><br>Slide, then show the code</td>
+    <td width="33%" align="center"><img src="docs/readme/hindi.jpg" alt="Home screen in Hindi" width="100%"><br><b>हिन्दी</b><br>The whole app switches</td>
+  </tr>
+</table>
+
+## What the assignment asked for
+
+| Asked | Where it is |
 |---|---|
-| a) Redesigned UI screens | `src/app/(tabs)/index.tsx` (Home), `history.tsx`, `profile.tsx`, plus deal, shop, search and claim screens that the journeys need |
-| b) Colour palette and typography | `src/theme/tokens.ts`, with the contrast ratio next to each colour |
-| c) Reusable components and guidelines | `src/components/*`, with `night.tsx` holding the ticket, gold number, sky glow and photo slot |
-| d) Interactive prototype | The app itself |
-| e) UX suggestions | The case study |
+| a) Redesigned screens | [Home](<src/app/(tabs)/index.tsx>), [History](<src/app/(tabs)/history.tsx>), [Profile](<src/app/(tabs)/profile.tsx>), plus deal, shop, search and [Use at counter](<src/app/claim/[id].tsx>) |
+| b) Colour palette and type | [`src/theme/tokens.ts`](src/theme/tokens.ts), with the measured contrast ratio next to each colour |
+| c) Components and guidelines | [`src/components`](src/components); the ticket, gold number, glow and photo slot are in [`night.tsx`](src/components/night.tsx). Guidelines are in the case study |
+| d) Interactive prototype | [The live app](https://locall-redesign.vercel.app/), with five journeys listed in the case study |
+| e) UX suggestions | The case study: 17 issues found on Locall's current screens and 10 ranked ideas |
 
-## The main changes
+## Try it in 60 seconds
 
-- **Home:** "Tonight's steal" leads, a ticket for the best deal nearby that ends soonest. Below it are eight shortcuts, one "Within 3 km" chip that opens a radius map, shops you follow, deals ending today, a local shop spotlight and the full feed.
-- **History:** holds what the brief asked for, past searches and bookmarks. Saved deals are grouped by ending soon, still on and ended. Searches re-run in one tap, and Viewed lists what you opened. Removing anything shows Undo.
-- **Profile:** "You saved ₹X" counts only completed orders, with a goal bar, medals, followed shops, orders and reviews. Language switches between English and हिन्दी live. No coordinates on screen.
-- **Use at counter:** slide a gold knob to use a deal. The ticket shows a short code for the shopkeeper and the saving is added to Profile.
-- **Accessibility:** text colours are at least 4.5:1 on the night background. Touch targets are at least 44 px, main buttons 48 to 60. Icon buttons have labels. The claim ticket's float and the savings count-up respect reduce motion.
-- **Demo clock:** shop open/closed status uses a fixed 6 PM so the prototype makes sense at any hour. Deal end times use the real clock and update every minute.
+1. On Home, tap **Within 3 km** and pick a distance.
+2. Tap **Food**, then open a deal.
+3. Save it with the bookmark. It shows up in **History** under Ending soon.
+4. On the deal page tap **Use at counter** and slide the gold knob.
+5. Open **Profile**: the saving is added to "You saved".
+
+## What changed
+
+- **Home:** the best deal nearby is on the first screen, with its shop, price, MRP, distance and end time. Six km chips became one radius chip, and nothing floats over the deals.
+- **History:** Saved, Searches and Viewed, as the brief asked. Saved deals are grouped by when they end, searches re-run in one tap, and removing anything shows Undo.
+- **Profile:** "You saved ₹" counts completed orders only. It has a real name instead of an email handle, and no coordinates.
+- **Use at counter:** a new screen. You slide to use a deal and get a short code for the shopkeeper.
+- **Hindi:** every label, deal, shop name and date switches live, and search understands खाना, किराना, kapde and sabzi.
+
+The look is called Locall Night: a deep navy background, one glowing object per screen, and gold only for money. Every text colour passes 4.5:1, touch targets are at least 44 px on web, and the claim ticket and savings count-up respect reduce motion.
+
+<p align="center">
+  <a href="https://locall-redesign.vercel.app/case-study/"><img src="docs/readme/case-study.jpg" alt="The case study page: Find it. Save it. Use it at the counter, with a slidable momos ticket and the a to e checklist" width="100%"></a>
+</p>
+
+## Why a coded app and not a Figma file
+
+The role is mobile app development, so I built the screens in the stack the real app could use. That also means every state actually exists: empty lists, ended deals, unknown links, Hindi and the narrow 320 px phone.
+
+## Code map
+
+| Path | What it does |
+|---|---|
+| `src/app/(tabs)/` | Home, History and Profile |
+| `src/app/claim/[id].tsx` | Use at counter: the slide-to-use ticket |
+| `src/app/deal`, `shop`, `search` | The screens the journeys need |
+| `src/components/night.tsx` | Ticket with real notches, gold number, sky glow, photo slot |
+| `src/components/tab-bar.tsx` | The floating dock |
+| `src/theme/tokens.ts` | Colours with contrast ratios, type scale, spacing, motion |
+| `src/i18n/strings.ts` | English and Hindi strings |
+| `src/store/store.tsx` | Saved deals, searches, follows, orders and language, saved on the device |
+| `src/data/catalog.ts` | Sample shops and deals for Durg and Bhilai |
+| `public/case-study/` | The case study page (static HTML) |
+
+## Built with
+
+- **Expo SDK 58 and React Native 0.88:** one codebase for Android, iOS and the web build
+- **Expo Router:** file-based screens and deep links
+- **Reanimated 4:** the dock, the ticket and the count-up
+- **react-native-svg:** ticket shapes, glows and gold gradients
+- **expo-image and expo-haptics:** photos and the tap on save and claim
+- **AsyncStorage:** keeps the demo state between visits
+- **TypeScript**
+
+## Checks
+
+- `npx tsc --noEmit` passes and `npx expo-doctor` passes 20 of 20 checks.
+- Lighthouse mobile on a production build: the case study scores 87 for performance and 100 for accessibility, best practices and SEO. The prototype scores 100 for accessibility.
 
 ## Run it
 
 ```bash
 npm install
-npx expo start          # press w for web, or scan the QR with Expo Go on Android
+npx expo start          # press w for web, or scan the QR code with Expo Go
+npx expo export -p web  # the build that is deployed, in dist/
 ```
 
-Web build (what's deployed):
+To test `dist/` locally, use a server that falls back to `index.html` for app routes. The `serve` package breaks `/case-study/`.
 
-```bash
-npx expo export -p web  # outputs dist/, including dist/case-study/
-```
+## Limits
 
-To test the web build locally, serve `dist/` with a server that falls back to `index.html` for app routes (the `serve` package breaks `/case-study/`).
-
-## Structure
-
-```
-src/
-  theme/tokens.ts     colours (+ contrast ratios), type scale, spacing, radius, motion springs
-  i18n/strings.ts     English + Hindi strings
-  data/catalog.ts     sample shops, deals, orders, reviews (Durg / Bhilai)
-  data/images.ts      photo and 3D icon map
-  store/store.tsx     saved deals, searches, viewed, follows, cart, orders, language (persisted), a ticking clock
-  lib/format.ts       ₹ formatting, distance + travel time, honest end-time labels, demo shop hours
-  lib/query.ts        filters, "ending today", Hindi and Hinglish search
-  components/         night (ticket, glow, gold number), deal-card, tab-bar (floating dock), radius-sheet, sheets, toast, ui
-  app/                (tabs)/index · history · profile, deal/[id], shop/[id], claim/[id], search, +not-found
-public/case-study/    the case study page (static HTML)
-```
-
-Stack: Expo SDK 58, React Native 0.88, Expo Router, Reanimated 4, react-native-svg, expo-image, expo-haptics, lucide-react-native, AsyncStorage, TypeScript.
+- There is no backend. Shops, prices, ratings and people are sample data, kept on the device.
+- Call and WhatsApp open Locall's real public contact number.
+- Shop open and closed status uses a fixed 6 PM clock so the demo makes sense at any hour. Deal end times use the real clock.
+- On the web the first load takes a few seconds, because the app ships about 1 MB of JavaScript.
 
 ## Credits
 
-Food and shop photos in `assets/images/photos` are placeholders picked for this prototype and belong to their owners. The gold 3D icons are from [3dicons](https://3dicons.co) (CC0). Type is Plus Jakarta Sans, Instrument Serif and Noto Sans Devanagari (OFL). The Locall logo belongs to Localstack Market Pvt Ltd and is used here only to show the redesign in context.
+Made by Aayush Thakur. Food and shop photos are placeholders and belong to their owners. The gold 3D icons are from [3dicons](https://3dicons.co) (CC0). Type is Plus Jakarta Sans, Instrument Serif and Noto Sans Devanagari (OFL). The Locall logo belongs to Localstack Market Pvt Ltd and is used only to show the redesign in context.
