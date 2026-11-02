@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npx expo export -p web",
+  "outputDirectory": "dist",
+  "redirects": [{ "source": "/case-study", "destination": "/case-study/", "permanent": false }],
+  "rewrites": [{ "source": "/((?!case-study/).*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/case-study/img/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    }
+  ]
+}
