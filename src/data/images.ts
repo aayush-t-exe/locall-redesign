@@ -1,0 +1,32 @@
+/* Maps image keys to bundled photos (Pexels licence). Credits: assets/images/deals/CREDITS.md */
+export const images = {
+  'momos': require('../../assets/images/deals/momos.jpg'),
+  'kirana': require('../../assets/images/deals/kirana-shelf.jpg'),
+  'vegetables': require('../../assets/images/deals/vegetable-basket.jpg'),
+  'mithai': require('../../assets/images/deals/mithai-box.jpg'),
+  'jalebi': require('../../assets/images/deals/jalebi.jpg'),
+  'salon': require('../../assets/images/deals/salon.jpg'),
+  'chai': require('../../assets/images/deals/kulhad-chai.jpg'),
+  'kurta': require('../../assets/images/deals/ethnic-wear.jpg'),
+  'dosa': require('../../assets/images/deals/masala-dosa.jpg'),
+  'saree': require('../../assets/images/deals/saree-fabric-shop.jpg'),
+  'utensils': require('../../assets/images/deals/steel-utensils.jpg'),
+  'storage': require('../../assets/images/deals/plastic-storage.jpg'),
+  'shirts': require('../../assets/images/deals/mens-shirts.jpg'),
+  'shoes': require('../../assets/images/deals/kids-shoes.jpg'),
+  'chair': require('../../assets/images/deals/wooden-chair.jpg'),
+  'pizza': require('../../assets/images/deals/pizza.jpg'),
+  'thali': require('../../assets/images/deals/thali.jpg'),
+  'biryani': require('../../assets/images/deals/veg-biryani.jpg'),
+  'owner-momo': require('../../assets/images/deals/owner-food-stall.jpg'),
+  'owner-kirana': require('../../assets/images/deals/owner-kirana.jpg'),
+  'owner-vegetables': require('../../assets/images/deals/owner-vegetable-vendor.jpg'),
+  'owner-sweets': require('../../assets/images/deals/owner-sweet-shop.jpg'),
+  'store-sweets': require('../../assets/images/deals/store-sweet-shop.jpg'),
+  'owner-tailor': require('../../assets/images/deals/owner-tailor.jpg'),
+  'owner-menswear': require('../../assets/images/deals/owner-tailor-shop.jpg'),
+  'owner-chai': require('../../assets/images/deals/owner-chai-stall.jpg'),
+  'store-utensils': require('../../assets/images/deals/store-utensils.jpg'),
+} as const;
+
+export type ImageKey = keyof typeof images;
