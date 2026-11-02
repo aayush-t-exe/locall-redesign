@@ -9,6 +9,7 @@ import { EndsTag, OffBadge, Price, RailCard, SaveButton } from '@/components/dea
 import { ContactRow, FollowButton } from '@/components/shop-bits';
 import { CartSheet } from '@/components/sheets';
 import { Toast } from '@/components/toast';
+import { Gone } from '@/components/gone';
 import { GoldButton, Photo } from '@/components/night';
 import { AppText, Button, IconButton, Pressy, SectionHeader } from '@/components/ui';
 import { dealById, shopById } from '@/data/catalog';
@@ -28,7 +29,7 @@ export default function DealScreen() {
     if (deal) dispatch({ type: 'view', id: deal.id });
   }, [deal, dispatch]);
 
-  if (!deal) return null;
+  if (!deal) return <Gone title={t('dealGoneTitle')} body={t('dealGoneBody')} icon="giftBox" />;
   const shop = shopById[deal.shopId];
   const ended = isEnded(deal);
   const title = pick(deal, 'title', 'titleHi', state.lang);

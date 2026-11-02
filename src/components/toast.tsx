@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
     paddingRight: space.s,
     ...shadow.raised,
   },
-  action: { minHeight: 40, paddingHorizontal: space.m, justifyContent: 'center' },
+  action: { minHeight: 44, paddingHorizontal: space.m, justifyContent: 'center' },
 });

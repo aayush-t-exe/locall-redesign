@@ -38,8 +38,11 @@ export default function Profile() {
   const dock = useDockSpace();
   const [alerts, setAlerts] = useState(true);
 
-  const savedTotal = state.orders.reduce((s, o) => s + o.saved, 0);
-  const shopCount = new Set(state.orders.map((o) => dealById[o.dealId]?.shopId)).size;
+  const orders = state.orders.filter((o) => dealById[o.dealId]);
+  const picked = orders.filter((o) => o.status === 'picked');
+  const savedTotal = picked.reduce((s, o) => s + o.saved, 0);
+  const shopCount = new Set(picked.map((o) => dealById[o.dealId].shopId)).size;
+  const notInPrototype = () => showToast({ message: t('prototypeOnly') });
   const goal = MILESTONES.find((m) => m > savedTotal) ?? MILESTONES[MILESTONES.length - 1];
   const reviews = state.newUser ? [] : seedReviews;
   const followed = state.following.map((id) => shopById[id]).filter(Boolean);
@@ -72,7 +75,7 @@ export default function Profile() {
             {pick(AREAS[state.area], 'name', 'nameHi', state.lang)} · {DEMO_USER.phone}
           </AppText>
         </View>
-        <IconButton icon={Pencil} label={t('edit')} size={42} />
+        <IconButton icon={Pencil} label={t('edit')} size={44} onPress={notInPrototype} />
       </View>
 
       {/* Savings hero */}
@@ -80,13 +83,13 @@ export default function Profile() {
 
       {/* Stats */}
       <View style={styles.stats}>
-        <Stat value={state.orders.length} label={t('orders')} />
+        <Stat value={orders.length} label={t('orders')} />
         <Stat value={state.following.length} label={t('followingStat')} />
         <Stat value={reviews.length} label={t('reviewsStat')} />
       </View>
       {savedTotal > 0 && (
         <View style={styles.stats}>
-          <Medal icon="medal" title={t('medalFirst')} sub={pick(state.orders[state.orders.length - 1], 'dateLabel', 'dateLabelHi', state.lang)} />
+          <Medal icon="medal" title={t('medalFirst')} sub={pick(picked[picked.length - 1], 'dateLabel', 'dateLabelHi', state.lang)} />
           <Medal icon="teaCup" title={t('medalChai')} sub={t('visits', { n: 5 })} />
           <Medal icon="crown" title={t('medalInsider')} sub={t('toGo', { n: rupees(Math.max(goal - savedTotal, 0)) })} locked />
         </View>
@@ -122,7 +125,7 @@ export default function Profile() {
       {/* Orders */}
       <View style={styles.block}>
         <SectionHeader title={t('myOrders')} />
-        {state.orders.length === 0 ? (
+        {orders.length === 0 ? (
           <View style={[styles.panel, { marginHorizontal: space.xl }]}>
             <EmptyState
               icon={Package}
@@ -135,7 +138,7 @@ export default function Profile() {
           </View>
         ) : (
           <View style={[styles.panel, { marginHorizontal: space.xl }]}>
-            {state.orders.slice(0, 4).map((o, i) => {
+            {orders.slice(0, 4).map((o, i) => {
               const d = dealById[o.dealId];
               const shop = shopById[d.shopId];
               const ready = o.status === 'reserved';
@@ -238,11 +241,11 @@ export default function Profile() {
             />
           </Row>
           <View style={styles.sep} />
-          <Row icon={HomeIcon} title={t('addresses')} sub={t('addressesSub')} chevron />
+          <Row icon={HomeIcon} title={t('addresses')} sub={t('addressesSub')} chevron onPress={notInPrototype} />
           <View style={styles.sep} />
-          <Row icon={CircleHelp} title={t('help')} chevron />
+          <Row icon={CircleHelp} title={t('help')} chevron onPress={notInPrototype} />
           <View style={styles.sep} />
-          <Row icon={LogOut} title={t('signOut')} danger />
+          <Row icon={LogOut} title={t('signOut')} danger onPress={notInPrototype} />
         </View>
       </View>
 
@@ -340,7 +343,7 @@ function SavingsCard({ total, shops, goal }: { total: number; shops: number; goa
 }
 
 function useCountUp(target: number) {
-  const [value, setValue] = useState(target);
+  const [value, setValue] = useState(0);
   useEffect(() => {
     let raf = 0;
     let cancelled = false;

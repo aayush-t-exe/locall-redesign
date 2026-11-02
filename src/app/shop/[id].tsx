@@ -11,6 +11,7 @@ import { shopById } from '@/data/catalog';
 import { Photo } from '@/components/night';
 import { isOpen, kmLabel, pick, travel } from '@/lib/format';
 import { liveDeals } from '@/lib/query';
+import { Gone } from '@/components/gone';
 import { useStore } from '@/store/store';
 import { color, radius, space } from '@/theme/tokens';
 
@@ -19,7 +20,7 @@ export default function ShopScreen() {
   const shop = shopById[id ?? ''];
   const { state, t } = useStore();
   const insets = useSafeAreaInsets();
-  if (!shop) return null;
+  if (!shop) return <Gone title={t('shopGoneTitle')} body={t('shopGoneBody')} icon="mapPin" />;
   const shopDeals = liveDeals().filter((d) => d.shopId === shop.id);
   const open = isOpen(shop);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/'));

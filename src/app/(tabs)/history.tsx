@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowUpRight, Bookmark, Clock, Eye, Search, X } from '@/components/icons';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,9 +17,11 @@ import { color, radius, space } from '@/theme/tokens';
 type TabKey = 'saved' | 'searches' | 'viewed';
 
 export default function History() {
-  const { state, dispatch, t, showToast, haptic } = useStore();
+  const { state, dispatch, t, showToast, haptic, now } = useStore();
   const insets = useSafeAreaInsets();
   const dock = useDockSpace();
+  const { width } = useWindowDimensions();
+  const narrow = width < 360;
   const params = useLocalSearchParams<{ tab?: TabKey }>();
   const [tab, setTab] = useState<TabKey>(params.tab ?? 'saved');
 
@@ -28,10 +30,10 @@ export default function History() {
   }, [params.tab]);
 
   const saved = state.saved.map((s) => dealById[s.id]).filter(Boolean);
-  const ended = saved.filter((d) => isEnded(d));
-  const live = saved.filter((d) => !isEnded(d)).sort((a, b) => hoursLeft(a) - hoursLeft(b));
-  const soon = live.filter((d) => hoursLeft(d) < 24);
-  const later = live.filter((d) => hoursLeft(d) >= 24);
+  const ended = saved.filter((d) => isEnded(d, now));
+  const live = saved.filter((d) => !isEnded(d, now)).sort((a, b) => hoursLeft(a, now) - hoursLeft(b, now));
+  const soon = live.filter((d) => hoursLeft(d, now) < 24);
+  const later = live.filter((d) => hoursLeft(d, now) >= 24);
   const toSave = live.reduce((s, d) => s + (d.mrp - d.price), 0);
   const viewed = state.viewed.map((v) => ({ deal: dealById[v.id], at: v.at })).filter((v) => v.deal);
 
@@ -41,8 +43,8 @@ export default function History() {
     <View style={{ flex: 1, backgroundColor: color.paper }}>
       <ScrollView contentContainerStyle={{ paddingTop: insets.top + space.l, paddingBottom: dock }} showsVerticalScrollIndicator={false}>
         <Sky kind="history" />
-        <View style={styles.head}>
-          <Gold3D k="bookmark" size={150} style={styles.obj} />
+        <View style={[styles.head, narrow && { paddingRight: 112 }]}>
+          <Gold3D k="bookmark" size={narrow ? 104 : 150} style={[styles.obj, narrow && { top: -4, right: 0 }]} />
           <AppText variant="display" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 38, letterSpacing: -1 }}>
             {t('historyTitle')}
           </AppText>
@@ -69,7 +71,7 @@ export default function History() {
             }}
             items={[
               { key: 'saved', label: t('tabSaved'), count: saved.length },
-              { key: 'searches', label: t('tabSearches'), count: state.searches.length },
+              { key: 'searches', label: t('tabSearches'), count: narrow ? undefined : state.searches.length },
               { key: 'viewed', label: t('tabViewed') },
             ]}
           />
@@ -97,6 +99,7 @@ export default function History() {
                   <Pressable
                     hitSlop={12}
                     accessibilityRole="button"
+                    style={styles.clearAll}
                     onPress={() => {
                       const before = state.searches;
                       dispatch({ type: 'restoreSearches', searches: [] });
@@ -159,7 +162,7 @@ export default function History() {
                     <AppText variant="small" tone={color.muted} style={{ marginBottom: 6, marginLeft: 4 }}>
                       {timeAgo(at, t)}
                     </AppText>
-                    <RowCard deal={deal} dim={isEnded(deal)} trailing={<SaveButton dealId={deal.id} variant="plain" />} />
+                    <RowCard deal={deal} dim={isEnded(deal, now)} trailing={<SaveButton dealId={deal.id} variant="plain" />} />
                   </View>
                 ))}
               </View>
@@ -213,4 +216,5 @@ const styles = StyleSheet.create({
   searchMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space.m, minHeight: 64, paddingLeft: space.l },
   searchIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: color.goldTint, alignItems: 'center', justifyContent: 'center' },
   similar: { minHeight: 44, justifyContent: 'center' },
+  clearAll: { minHeight: 44, minWidth: 44, justifyContent: 'center', alignItems: 'flex-end' },
 });

@@ -238,11 +238,18 @@ export const RADIUS_STOPS = [1, 3, 5, 10, 20, 0] as const; // 0 = any
 /** Past activity for the demo user. */
 export type Order = { id: string; dealId: string; dateLabel: string; dateLabelHi: string; saved: number; paid: number; status: 'picked' | 'reserved'; code?: string };
 
+/** Order dates are relative to today, so the demo never shows a stale month. */
+const ago = (days: number, locale: string) =>
+  new Date(Date.now() - days * 86_400_000).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+const seed = (id: string, dealId: string, days: number, saved: number, paid: number): Order => ({
+  id, dealId, dateLabel: ago(days, 'en-IN'), dateLabelHi: ago(days, 'hi-IN'), saved, paid, status: 'picked',
+});
+
 export const seedOrders: Order[] = [
-  { id: 'o1', dealId: 'd-kurta', dateLabel: '28 Oct', dateLabelHi: '28 अक्टू', saved: 250, paid: 549, status: 'picked' },
-  { id: 'o2', dealId: 'd-haircut', dateLabel: '24 Oct', dateLabelHi: '24 अक्टू', saved: 71, paid: 149, status: 'picked' },
-  { id: 'o3', dealId: 'd-atta', dateLabel: '19 Oct', dateLabelHi: '19 अक्टू', saved: 51, paid: 389, status: 'picked' },
-  { id: 'o4', dealId: 'd-jalebi', dateLabel: '12 Oct', dateLabelHi: '12 अक्टू', saved: 20, paid: 50, status: 'picked' },
+  seed('o1', 'd-kurta', 2, 250, 549),
+  seed('o2', 'd-haircut', 6, 71, 149),
+  seed('o3', 'd-atta', 11, 51, 389),
+  seed('o4', 'd-jalebi', 18, 20, 50),
 ];
 
 export type Review = { id: string; shopId: string; stars: number; text: string; textHi: string; when: string; whenHi: string };

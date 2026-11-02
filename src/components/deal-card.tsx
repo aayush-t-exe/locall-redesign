@@ -64,8 +64,8 @@ export function OffBadge({ deal, style }: { deal: Deal; style?: object }) {
 }
 
 export function EndsTag({ deal, compact }: { deal: Deal; compact?: boolean }) {
-  const { t, state } = useStore();
-  const e = endsLabel(deal, t, state.lang);
+  const { t, state, now } = useStore();
+  const e = endsLabel(deal, t, state.lang, now);
   if (e.urgent) return <EmberChip label={e.text} />;
   return (
     <View style={[styles.ends, compact && { paddingHorizontal: 0 }]}>
@@ -117,8 +117,8 @@ function MetaLine({ deal, showOpen = true }: { deal: Deal; showOpen?: boolean })
         {t('reviews', { n: shop.reviews })}
       </AppText>
       <Dot />
-      <AppText variant="small" tone={color.inkSoft} weight="600" numberOfLines={1}>
-        {kmLabel(shop.km)} · {travel(shop, t)}
+      <AppText variant="small" tone={color.inkSoft} weight="600" numberOfLines={1} style={{ flexShrink: 1 }}>
+        {kmLabel(shop.km).replace(' ', '\u00A0')} · {travel(shop, t)}
       </AppText>
       {showOpen && !open && (
         <>
@@ -221,10 +221,10 @@ export function DealCard({ deal }: { deal: Deal }) {
 /* ---------- Rail card: tall photo, text on a scrim ---------- */
 
 export function RailCard({ deal, width = 156 }: { deal: Deal; width?: number }) {
-  const { state, t } = useStore();
+  const { state, t, now } = useStore();
   const title = pick(deal, 'title', 'titleHi', state.lang);
   const shop = shopById[deal.shopId];
-  const e = endsLabel(deal, t, state.lang);
+  const e = endsLabel(deal, t, state.lang, now);
   return (
     <Pressy
       onPress={() => openDeal(deal.id)}
@@ -302,7 +302,7 @@ export function RowCard({ deal, trailing, dim, glow, ends }: { deal: Deal; trail
 }
 
 const styles = StyleSheet.create({
-  save: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  save: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   saveFloat: { backgroundColor: 'rgba(5,6,26,0.62)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)' },
   savePlain: { backgroundColor: 'transparent' },
   off: {

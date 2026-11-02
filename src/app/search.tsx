@@ -60,7 +60,7 @@ export default function SearchScreen() {
             <IconButton
               icon={X}
               label={t('close')}
-              size={40}
+              size={44}
               bg="transparent"
               tone={color.muted}
               onPress={() => {
@@ -99,7 +99,7 @@ export default function SearchScreen() {
         ) : (
           <View style={{ padding: space.xl, gap: space.s }}>
             <AppText variant="label" tone={color.muted}>
-              {t('resultsCount', { n: results.length })}
+              {results.length === 1 ? t('resultsCountOne') : t('resultsCount', { n: results.length })}
             </AppText>
             {results.map((d) => (
               <RowCard key={d.id} deal={d} trailing={<SaveButton dealId={d.id} variant="plain" />} />

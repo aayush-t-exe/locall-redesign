@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    minHeight: 40,
+    minHeight: 44,
     paddingHorizontal: 14,
     borderRadius: radius.pill,
     borderWidth: 1.5,
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   chipOff: { backgroundColor: color.sunk, borderColor: color.line },
   chipOn: { backgroundColor: color.goldTint, borderColor: color.goldLine },
   section: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: space.xl, marginBottom: space.m, gap: space.m },
-  sectionAction: { minHeight: 32, justifyContent: 'center' },
+  sectionAction: { minHeight: 44, minWidth: 44, justifyContent: 'center' },
   seg: {
     flexDirection: 'row',
     backgroundColor: color.sunk,

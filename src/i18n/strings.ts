@@ -82,6 +82,7 @@ const en = {
   recentSearches: 'Recent searches',
   searchAgain: 'Search again',
   resultsCount: '{n} results',
+  resultsCountOne: '1 result',
   emptySavedTitle: 'Nothing saved yet',
   emptySavedBody: 'Tap the bookmark on any deal to keep it here. We will remind you before it ends.',
   emptySearchTitle: 'No searches yet',
@@ -97,7 +98,7 @@ const en = {
   justNow: 'Just now',
 
   youSaved: 'You saved',
-  thisMonth: 'this month at {n} local shops',
+  thisMonth: 'so far at {n} local shops',
   nextMilestone: '₹{n} more to reach ₹{goal}',
   startSaving: 'Your first saving is one deal away',
   orders: 'Orders',
@@ -151,6 +152,14 @@ const en = {
   back: 'Back',
   close: 'Close',
   sampleData: 'Sample data for the prototype',
+  prototypeOnly: 'Not part of this prototype',
+  dealGoneTitle: 'This deal has ended',
+  dealGoneBody: 'It may have run out or the shop took it down. There are more near you.',
+  shopGoneTitle: 'We can’t find this shop',
+  shopGoneBody: 'The link may be old. Shops near you are on Home.',
+  backHome: 'Back to Home',
+  notFoundTitle: 'This page isn’t here',
+  notFoundBody: 'The link may be old or mistyped.',
 
   // Locall Night
   areaSub: 'Durg · deals within {km} km',
@@ -162,7 +171,7 @@ const en = {
   shortKirana: 'Kirana',
   shortSalon: 'Salon',
   shortGifts: 'Gifts',
-  shortOpen: 'Open now',
+  shortOpen: 'Open',
   shortTop: 'Top rated',
   shortNear: 'Near me',
   sortRating: 'Top rated first',
@@ -170,7 +179,7 @@ const en = {
   savedN: '{n} saved',
   toSaveTail: 'still to save',
   youSavedLux: 'you saved',
-  thisMonthAt: 'this month, at {n} shops in Durg',
+  thisMonthAt: 'so far, at {n} shops in Durg',
   insiderGoal: '{n} more to become a Durg Insider',
   medalFirst: 'First steal',
   medalChai: 'Chai regular',
@@ -185,7 +194,7 @@ const en = {
   claimedTitle: 'Ready at the counter',
   claimedBody: 'Show this code to {shop}. They tap “Done” on Locall Partner.',
   validTill: 'Valid till {t} · one per person',
-  savesAdds: 'Saves {n} · adds to your {total} this month',
+  savesAdds: 'Saves {n} · your total becomes {total}',
 };
 
 export type StringKey = keyof typeof en;
@@ -271,6 +280,7 @@ const hi: Record<StringKey, string> = {
   recentSearches: 'हाल की खोजें',
   searchAgain: 'फिर से खोजें',
   resultsCount: '{n} नतीजे',
+  resultsCountOne: '1 नतीजा',
   emptySavedTitle: 'अभी कुछ सेव नहीं किया',
   emptySavedBody: 'किसी भी ऑफ़र पर बुकमार्क दबाइए। ख़त्म होने से पहले हम याद दिला देंगे।',
   emptySearchTitle: 'अभी कोई खोज नहीं',
@@ -286,7 +296,7 @@ const hi: Record<StringKey, string> = {
   justNow: 'अभी',
 
   youSaved: 'आपने बचाए',
-  thisMonth: 'इस महीने, {n} लोकल दुकानों से',
+  thisMonth: 'अब तक, {n} लोकल दुकानों से',
   nextMilestone: '₹{goal} तक पहुँचने में ₹{n} बाकी',
   startSaving: 'आपकी पहली बचत बस एक ऑफ़र दूर है',
   orders: 'ऑर्डर',
@@ -340,6 +350,14 @@ const hi: Record<StringKey, string> = {
   back: 'वापस',
   close: 'बंद करें',
   sampleData: 'प्रोटोटाइप के लिए सैंपल डेटा',
+  prototypeOnly: 'यह प्रोटोटाइप में नहीं है',
+  dealGoneTitle: 'यह ऑफ़र ख़त्म हो गया',
+  dealGoneBody: 'शायद स्टॉक ख़त्म हुआ या दुकान ने हटा दिया। आपके पास और ऑफ़र हैं।',
+  shopGoneTitle: 'यह दुकान नहीं मिली',
+  shopGoneBody: 'लिंक पुराना हो सकता है। पास की दुकानें होम पर हैं।',
+  backHome: 'होम पर जाएँ',
+  notFoundTitle: 'यह पेज यहाँ नहीं है',
+  notFoundBody: 'लिंक पुराना या ग़लत हो सकता है।',
 
   areaSub: 'दुर्ग · {km} किमी के अंदर ऑफ़र',
   areaSubAny: 'दुर्ग · किसी भी दूरी पर ऑफ़र',
@@ -350,7 +368,7 @@ const hi: Record<StringKey, string> = {
   shortKirana: 'किराना',
   shortSalon: 'सैलून',
   shortGifts: 'गिफ़्ट',
-  shortOpen: 'अभी खुला',
+  shortOpen: 'खुला',
   shortTop: 'टॉप रेटेड',
   shortNear: 'पास में',
   sortRating: 'टॉप रेटेड पहले',
@@ -358,7 +376,7 @@ const hi: Record<StringKey, string> = {
   savedN: '{n} सेव',
   toSaveTail: 'अभी बचा सकते हैं',
   youSavedLux: 'आपने बचाए',
-  thisMonthAt: 'इस महीने, दुर्ग की {n} दुकानों पर',
+  thisMonthAt: 'अब तक, दुर्ग की {n} दुकानों पर',
   insiderGoal: '{n} और, फिर आप दुर्ग इनसाइडर',
   medalFirst: 'पहली बचत',
   medalChai: 'चाय के शौक़ीन',
@@ -373,7 +391,7 @@ const hi: Record<StringKey, string> = {
   claimedTitle: 'काउंटर पर तैयार',
   claimedBody: '{shop} को यह कोड दिखाएँ। वे Locall Partner पर “Done” दबाएँगे।',
   validTill: '{t} तक मान्य · एक व्यक्ति एक बार',
-  savesAdds: '{n} बचेंगे · इस महीने के {total} में जुड़ेगा',
+  savesAdds: '{n} बचेंगे · कुल बचत {total} होगी',
 };
 
 export const strings: Record<Lang, Record<StringKey, string>> = { en, hi };

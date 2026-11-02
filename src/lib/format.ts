@@ -71,9 +71,14 @@ export function pctOff(deal: Deal) {
   return Math.round(((deal.mrp - deal.price) / deal.mrp) * 100);
 }
 
-export function isOpen(shop: Shop, now = new Date()) {
-  const h = now.getHours() + now.getMinutes() / 60;
-  return h >= shop.opens && h < shop.closes;
+/**
+ * Shop hours in the demo use a pinned clock: 6 PM in Durg (IST). Reviewers open the prototype at
+ * any hour, and a real clock at night would show every shop closed. Deal end times stay real.
+ */
+export const DEMO_HOUR = 18;
+
+export function isOpen(shop: Shop, hour = DEMO_HOUR) {
+  return hour >= shop.opens && hour < shop.closes;
 }
 
 export function timeAgo(ts: number, t: T, now = Date.now()) {

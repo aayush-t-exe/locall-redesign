@@ -6,6 +6,7 @@ import Animated, { cancelAnimation, FadeIn, useAnimatedStyle, useSharedValue, wi
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { OffBadge } from '@/components/deal-card';
+import { Gone } from '@/components/gone';
 import { GoldButton, GoldFill, GoldNumber, Halo, Lux, Photo, Sky, Ticket } from '@/components/night';
 import { AppText, IconButton } from '@/components/ui';
 import { type Deal, dealById, shopById } from '@/data/catalog';
@@ -30,7 +31,7 @@ export default function ClaimScreen() {
   const deal = dealById[id ?? ''];
   const { state, dispatch, t, haptic } = useStore();
   const insets = useSafeAreaInsets();
-  const already = state.orders.some((o) => o.dealId === deal?.id && o.status === 'reserved');
+  const already = !!deal && state.orders.some((o) => o.dealId === deal.id && o.code === counterCode(deal));
   const [claimed, setClaimed] = useState(already);
   // Done appears a beat after the claim, so the finger lifting off the slider can't tap it.
   const [doneReady, setDoneReady] = useState(already);
@@ -65,7 +66,7 @@ export default function ClaimScreen() {
     transform: [{ translateY: -6 * float.value }, { rotate: claimed ? '0deg' : '-4deg' }, { scale: pop.value }],
   }));
 
-  if (!deal) return null;
+  if (!deal) return <Gone title={t('dealGoneTitle')} body={t('dealGoneBody')} icon="giftBox" />;
   const shop = shopById[deal.shopId];
   const title = pick(deal, 'title', 'titleHi', state.lang);
   const code = counterCode(deal);

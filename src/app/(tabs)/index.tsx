@@ -39,34 +39,34 @@ const SHORTCUTS: Shortcut[] = [
 const shortName = (name: string) => name.split(' ').slice(0, 2).join(' ').replace(/[&,]$/, '');
 
 /** Tonight's steal: the best live deal nearby that has a photo, ending soonest. */
-function pickSteal(list: Deal[]) {
+function pickSteal(list: Deal[], now: number) {
   const withPhoto = list.filter((d) => images[d.image]);
   const pool = withPhoto.length ? withPhoto : list;
-  const soon = pool.filter((d) => hoursLeft(d) < 12);
+  const soon = pool.filter((d) => hoursLeft(d, now) < 12);
   return (soon.length ? soon : pool).slice().sort((a, b) => pctOff(b) - pctOff(a))[0];
 }
 
 export default function Home() {
-  const { state, dispatch, t, haptic } = useStore();
+  const { state, dispatch, t, haptic, now } = useStore();
   const insets = useSafeAreaInsets();
   const dock = useDockSpace();
   const [sheet, setSheet] = useState<'radius' | 'area' | 'cart' | null>(null);
   const [sort, setSort] = useState<Sort>('near');
 
-  const nearby = useMemo(() => filterDeals(state), [state]);
+  const nearby = useMemo(() => filterDeals({ ...state, now }), [state, now]);
   const feed = useMemo(() => {
     if (sort === 'big') return [...nearby].sort((a, b) => b.mrp - b.price - (a.mrp - a.price));
     if (sort === 'rating') return [...nearby].sort((a, b) => shopById[b.shopId].rating - shopById[a.shopId].rating);
     return nearby;
   }, [nearby, sort]);
-  const steal = useMemo(() => pickSteal(filterDeals({ ...state, category: 'all', openNow: false })), [state]);
-  const ending = useMemo(() => endingToday(state.radius).filter((d) => d.id !== steal?.id), [state.radius, steal]);
+  const steal = useMemo(() => pickSteal(filterDeals({ ...state, category: 'all', openNow: false, now }), now), [state, now]);
+  const ending = useMemo(() => endingToday(state.radius, now).filter((d) => d.id !== steal?.id), [state.radius, steal, now]);
   const followed = state.following.map((id) => shopById[id]).filter(Boolean);
   const cartCount = Object.values(state.cart).reduce((a, b) => a + b, 0);
   const area = AREAS[state.area];
   const nextRadius = state.radius === 0 ? 0 : ([3, 5, 10, 20, 0] as const).find((r) => r === 0 || r > state.radius) ?? 0;
   const spot = shopById[SPOTLIGHT];
-  const liveByShop = useMemo(() => new Set(liveDeals().map((d) => d.shopId)), []);
+  const liveByShop = useMemo(() => new Set(liveDeals(now).map((d) => d.shopId)), [now]);
   const initials = DEMO_USER.name.split(' ').map((p) => p[0]).join('');
   const home = state.category === 'all';
 
@@ -297,10 +297,10 @@ export default function Home() {
 /* ---------- Tonight's steal: the one glowing object on Home ---------- */
 
 function StealTicket({ deal }: { deal: Deal }) {
-  const { state, t } = useStore();
+  const { state, t, now } = useStore();
   const shop = shopById[deal.shopId];
   const title = pick(deal, 'title', 'titleHi', state.lang);
-  const e = endsLabel(deal, t, state.lang);
+  const e = endsLabel(deal, t, state.lang, now);
   return (
     <View style={styles.hero}>
       <Eyebrow label={t('tonightSteal')} style={{ paddingHorizontal: 0, marginBottom: space.l }} />

@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import { type Category, type Order, seedOrders, dealById } from '@/data/catalog';
 import { type Lang, type StringKey, strings, format } from '@/i18n/strings';
 
-const KEY = 'locall-demo-v1';
+const KEY = 'locall-demo-v2';
 const MIN = 60_000;
 
 export type SearchEntry = { q: string; at: number; results: number };
@@ -90,6 +90,7 @@ function reducer(state: State, action: Action): State {
       };
     }
     case 'restoreSaved': {
+      if (state.saved.some((s) => s.id === action.entry.id)) return state; // Undo tapped twice
       const next = [...state.saved];
       next.splice(action.index, 0, action.entry);
       return { ...state, saved: next };
@@ -139,8 +140,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, cart: {}, orders: [...newOrders, ...state.orders] };
     }
     case 'claim': {
-      // One claim per deal: using the ticket at the counter becomes a reserved order.
-      if (state.orders.some((o) => o.dealId === action.id && o.status === 'reserved')) return state;
+      // One claim per deal. Using the ticket at the counter is a completed (picked) order.
+      if (state.orders.some((o) => o.dealId === action.id && o.code === action.code)) return state;
       const d = dealById[action.id];
       if (!d) return state;
       const order: Order = {
@@ -150,7 +151,7 @@ function reducer(state: State, action: Action): State {
         dateLabelHi: 'आज',
         saved: d.mrp - d.price,
         paid: d.price,
-        status: 'reserved',
+        status: 'picked',
         code: action.code,
       };
       return { ...state, orders: [order, ...state.orders] };
@@ -178,6 +179,8 @@ type Store = {
   showToast: (t: Omit<Toast, 'id'>) => void;
   hideToast: () => void;
   haptic: (kind?: 'light' | 'success' | 'select') => void;
+  /** Ticks every minute so countdowns and "ending today" stay true while the app is open. */
+  now: number;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -186,6 +189,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [hydrated, setHydrated] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -226,11 +235,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ state, dispatch, t, toast, showToast, hideToast, haptic }),
-    [state, t, toast, showToast, hideToast, haptic],
+    () => ({ state, dispatch, t, toast, showToast, hideToast, haptic, now }),
+    [state, t, toast, showToast, hideToast, haptic, now],
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  // Render only after saved settings load: no English flash for Hindi users, no lost history.
+  return <Ctx.Provider value={value}>{hydrated ? children : null}</Ctx.Provider>;
 }
 
 export function useStore() {

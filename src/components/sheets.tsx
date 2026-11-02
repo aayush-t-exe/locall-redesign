@@ -11,11 +11,17 @@ import { Sheet } from './sheet';
 import { AppText, Button, EmptyState, IconButton } from './ui';
 
 export function AreaSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
-  const { state, dispatch, t, haptic } = useStore();
+  const { state, dispatch, t, haptic, showToast } = useStore();
   return (
     <Sheet visible={visible} onClose={onClose} title={t('areaTitle')}>
       <View style={{ paddingHorizontal: space.xl, gap: space.s }}>
-        <Pressable style={styles.areaRow} accessibilityRole="button" onPress={onClose}>
+        <Pressable
+          style={styles.areaRow}
+          accessibilityRole="button"
+          onPress={() => {
+            onClose();
+            showToast({ message: t('prototypeOnly') });
+          }}>
           <LocateFixed size={22} color={color.navy} />
           <AppText variant="bodyStrong" tone={color.navy}>
             {t('areaUseGps')}

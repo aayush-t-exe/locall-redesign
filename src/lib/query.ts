@@ -1,15 +1,15 @@
 import { type Category, type Deal, deals, shopById } from '@/data/catalog';
 
-import { hoursLeft, isEnded, isOpen, pctOff } from './format';
+import { endsAt, hoursLeft, isEnded, isOpen, pctOff } from './format';
 
-type Filters = { radius: number; category: 'all' | Category; openNow: boolean };
+type Filters = { radius: number; category: 'all' | Category; openNow: boolean; now?: number };
 
-export function liveDeals() {
-  return deals.filter((d) => !isEnded(d));
+export function liveDeals(now = Date.now()) {
+  return deals.filter((d) => !isEnded(d, now));
 }
 
-export function filterDeals({ radius, category, openNow }: Filters) {
-  return liveDeals()
+export function filterDeals({ radius, category, openNow, now = Date.now() }: Filters) {
+  return liveDeals(now)
     .filter((d) => {
       const shop = shopById[d.shopId];
       if (radius && shop.km > radius) return false;
@@ -20,11 +20,12 @@ export function filterDeals({ radius, category, openNow }: Filters) {
     .sort((a, b) => shopById[a.shopId].km - shopById[b.shopId].km || pctOff(b) - pctOff(a));
 }
 
-/** Deals that end within the next ~12 hours, nearest first. */
-export function endingToday(radius: number) {
-  return liveDeals()
-    .filter((d) => hoursLeft(d) < 12 && (!radius || shopById[d.shopId].km <= radius))
-    .sort((a, b) => hoursLeft(a) - hoursLeft(b));
+/** Deals that end today (by the calendar, not a rolling window), soonest first. */
+export function endingToday(radius: number, now = Date.now()) {
+  const today = new Date(now).toDateString();
+  return liveDeals(now)
+    .filter((d) => new Date(endsAt(d)).toDateString() === today && (!radius || shopById[d.shopId].km <= radius))
+    .sort((a, b) => hoursLeft(a, now) - hoursLeft(b, now));
 }
 
 /** People type in English, Hindi and Hinglish; map the common words onto categories. */
@@ -42,7 +43,7 @@ const SHOP_WORDS: Record<string, string[]> = {
   'sahu-veg': ['sabzi', 'sabji', 'सब्ज़ी', 'vegetables', 'veggies'],
 };
 
-const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}\s]/gu, '').trim();
+const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{M}\p{N}\s]/gu, '').trim();
 
 export function searchDeals(q: string): Deal[] {
   const query = norm(q);
